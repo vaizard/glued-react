@@ -47,6 +47,12 @@ export default class ClipDrawer extends React.Component {
       .then(r => {return r.json()})
       .then(parsedJson => {this.setState({routes: parsedJson})})
       .catch((e) => { alert("pico nejedeto" + e)} )
+
+      fetch('https://10.146.149.186:8001/core/status/phpinfo')
+      .then(r => {return r})
+      .then(content => {this.setState({content: content})})
+      .catch((e) => { alert("pico nejedeto" + e)} )
+
   }
 
   // =================================
@@ -61,7 +67,7 @@ export default class ClipDrawer extends React.Component {
 
   render() {
     let buttons = []
-    for(const [groupName, groupObject] of Object.entries(this.state.routes?.api?.children ?? {})) {
+    for(const [groupName, groupObject] of Object.entries(this.state.routes?.be?.children ?? {})) {
 
       buttons.push(<ListItem button key={groupName}>
             <ListItemIcon>
@@ -77,7 +83,7 @@ export default class ClipDrawer extends React.Component {
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <a href={'https://10.146.149.186:8001' + route.node.url}><ListItemText primary={route.node.name} /></a>
+            <a href={'https://10.146.149.186:8001' + route.node.url}><ListItemText primary={route.node.label} /></a>
           </ListItem >
         )
       }
@@ -147,6 +153,7 @@ export default class ClipDrawer extends React.Component {
             { JSON.stringify(this.state.routes) }
           </Typography>
           <Typography paragraph>
+            { this.state.content.getElementById('body') }
             Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
             eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
             neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
@@ -158,6 +165,8 @@ export default class ClipDrawer extends React.Component {
             tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
             eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
             posuere sollicitudin aliquam ultrices sagittis orci a.
+
+            
           </Typography>
         </Box>
       </Box>
