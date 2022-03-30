@@ -15,6 +15,9 @@ import MailIcon from '@mui/icons-material/Mail';
 import Button from '@mui/material/Button';
 import ListItemButton from '@mui/material/ListItemButton';
 import StarBorder from '@mui/icons-material/StarBorder';
+import Icon from '@mui/material/Icon';
+import iconMap from './IconMap';
+
 
 const drawerWidth = 360;
 
@@ -81,7 +84,7 @@ export default class ClipDrawer extends React.Component {
       for(const route of groupObject.children) {
         buttons.push(<ListItem button key={route.node.name}>
             <ListItemIcon>
-              <InboxIcon />
+              <Icon>star</Icon>;
             </ListItemIcon>
             <a href={'https://10.146.149.186:8001' + route.node.url}><ListItemText primary={route.node.label} /></a>
           </ListItem >
@@ -153,7 +156,7 @@ export default class ClipDrawer extends React.Component {
             { JSON.stringify(this.state.routes) }
           </Typography>
           <Typography paragraph>
-            { this.state.content.getElementById('body') }
+            { /* this.state.content.getElementById('body') */ }
             Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
             eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
             neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
