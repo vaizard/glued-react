@@ -14,6 +14,7 @@ import Collapse from "@mui/material/Collapse";
 import {ExpandLess, ExpandMore, Star} from "@mui/icons-material";
 import ListItemButton from "@mui/material/ListItemButton";
 import {Fragment} from "react";
+import Authentica from "@zelitomas/authentica.js"
 
 const drawerWidth = 360;
 

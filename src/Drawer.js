@@ -7,6 +7,15 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {endpoint} from "./consts";
 import LeftMenu from "./LeftMenu";
+import AuthenticationContext from "./AuthenticationContext"
+import IconButton from "@mui/material/IconButton";
+import {Menu} from "@mui/icons-material";
+import { v4 as uuidv4 } from 'uuid';
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
+
+
 
 
 
@@ -22,6 +31,7 @@ export default class ClipDrawer extends React.Component {
         this.state = {
             clicked: 0,
             routes: null,
+            alerts: []
         }
     }
 
@@ -36,7 +46,7 @@ export default class ClipDrawer extends React.Component {
     }
 
     initLoad() {
-        fetch(endpoint + '/api/skeleton/routes/tree/v1')
+        this.context.authenticatedFetch(endpoint + '/api/skeleton/routes/tree/v1')
             .then(r => {
                 return r.json()
             })
@@ -44,10 +54,10 @@ export default class ClipDrawer extends React.Component {
                 this.setState({routes: parsedJson})
             })
             .catch((e) => {
-                alert("pico nejedeto" + e)
+                this.addAlert(e.toString(), "error", "Pico nejede to")
             });
 
-        fetch('' + endpoint + '/core/status/phpinfo')
+        this.context.authenticatedFetch('' + endpoint + '/core/status/phpinfo')
             .then(r => {
                 return r
             })
@@ -55,7 +65,7 @@ export default class ClipDrawer extends React.Component {
                 this.setState({content: content})
             })
             .catch((e) => {
-                alert("pico nejedeto" + e)
+                this.addAlert(e.toString(), "error", "Pico nejede to")
             })
 
     }
@@ -76,19 +86,36 @@ export default class ClipDrawer extends React.Component {
                 <CssBaseline/>
                 <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
                     <Toolbar>
-                        <Typography variant="h6" noWrap component="div">
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <Menu />
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Glued
                         </Typography>
-                        <Button color="inherit" onClick={() => {
-                            this.initLoad()
-                        }} sx={{align: 'right'}}>Login</Button>
+                        <Button color="inherit" onClick={this.handleLogout}>Logout</Button>
                     </Toolbar>
                 </AppBar>
 
                 <LeftMenu routes={this.state.routes}/>
 
                 <Box component="main" sx={{flexGrow: 1, p: 3}}>
+
                     <Toolbar/>
+
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        {this.state.alerts.map(alert => {
+                            return <Alert severity={alert.severity} onClose={() => {this.removeAlert(alert.uuid)}} key={alert.uuid} variant="filled">
+                                {alert.title && <AlertTitle>{alert.title}</AlertTitle>}
+                                {alert.text}
+                            </Alert>
+                        })}
+                    </Stack>
                     <Typography paragraph>
                         {JSON.stringify(this.state.routes)}
                     </Typography>
@@ -113,4 +140,28 @@ export default class ClipDrawer extends React.Component {
         );
     }
 
+    handleLogout = () => this.context.logout()
+
+    addAlert = (text, severity, title) => {
+        const newAlert = {
+            uuid: uuidv4(),
+            text: text,
+            severity: severity ?? 'info',
+            title: title
+        };
+
+        this.setState( prevState => ({
+            alerts: [newAlert, ...prevState.alerts]
+        }))
+    }
+
+    removeAlert = (uuid) => {
+        this.setState(prevState => ({
+            alerts: prevState.alerts.filter(alert => alert.uuid !== uuid)
+        }))
+    }
+
+
 }
+
+ClipDrawer.contextType = AuthenticationContext;
