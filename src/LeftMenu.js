@@ -15,52 +15,58 @@ import {ExpandLess, ExpandMore, Star} from "@mui/icons-material";
 import ListItemButton from "@mui/material/ListItemButton";
 import {Fragment} from "react";
 import Authentica from "@zelitomas/authentica.js"
+import {useNavigate} from "react-router-dom";
 
 const drawerWidth = 360;
 
-
 export default function LeftMenu(props) {
     const {routes} = props;
+    let navigate = useNavigate();
     let [openItem, setOpenItem] = useState(null);
     let buttons = [];
-    for (const [groupName, groupObject] of Object.entries(routes?.be?.children ?? {})) {
+    let withoutGroup = null
+    for (const [groupName, groupObject] of Object.entries(routes)) {
         let subButtons = [];
         for (const route of groupObject.children) {
             subButtons.push(
-                <ListItemButton key={route.node.name} sx={{pl: 4}} onClick={() => dummyNavigate(endpoint + route.node.url)}>
+                <ListItemButton key={route.name} sx={{pl: 4}} onClick={() => navigate(route.path)}>
                     <ListItemIcon>
                         <Star />
                     </ListItemIcon>
-                    <ListItemText primary={route.node.label}/>
+                    <ListItemText primary={route.label}/>
                 </ListItemButton>
             )
         }
 
-        const open = openItem === groupName;
+        const isOpen = openItem === groupName;
 
-        buttons.push(
-            <Fragment>
-                <ListItem button key={groupName} onClick={() => {
-                    setOpenItem(groupName)
-                }}>
-                    <ListItemIcon>
-                        <InboxIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary={groupName}/>
-                    {open ? <ExpandLess/> : <ExpandMore/>}
-
-
-                </ListItem>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        {subButtons}
-
-                    </List>
-                </Collapse>
-            </Fragment>
-        )
+        // Objects without groups
+        if(groupName === "") {
+            withoutGroup = subButtons
+        } else {
+            buttons.push(
+                <Fragment>
+                    <ListItem button key={groupName} onClick={() => {
+                        let newOpen = groupName === openItem ? "  " : groupName;
+                        setOpenItem(newOpen)
+                    }}>
+                        <ListItemIcon>
+                            <InboxIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={groupObject.label}/>
+                        {isOpen ? <ExpandLess/> : <ExpandMore/>}
 
 
+                    </ListItem>
+                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            {subButtons}
+
+                        </List>
+                    </Collapse>
+                </Fragment>
+            )
+        }
     }
 
 
@@ -76,8 +82,14 @@ export default function LeftMenu(props) {
         <Box sx={{overflow: 'auto'}}>
             <List>
                 {buttons}
+                {withoutGroup !== null ?
+                    <Fragment>
+                        <Divider/>
+                        {withoutGroup}
+                    </Fragment>
+                : null
+                }
             </List>
-            <Divider/>
         </Box>
     </Drawer>
 }
