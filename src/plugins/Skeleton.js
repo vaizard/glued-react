@@ -9,7 +9,6 @@ class Skeleton extends React.Component {
 
 
     constructor(props) {
-
         super(props);
         this.state = {
 	    content: null
