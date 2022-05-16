@@ -8,3 +8,4 @@ export default {
     "label": "Enforce",
     "module": lazy(() => import(`./Core`)),
 }
+
