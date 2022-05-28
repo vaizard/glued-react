@@ -11,9 +11,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
-// Temp workaround
-const isUserLoggerIn = () => !!localStorage.getItem("access_token");
+import Authentication from "./Authentication";
 
 
 class App extends React.Component{
@@ -25,19 +23,30 @@ class App extends React.Component{
       loginInitializing: true,
       authenticated: false
     };
-    this.authenticator = new Authenticator(authenticatorOptions)
+
+    this.authentication = new Authentication()
   }
 
   componentDidMount = () => {
+    this.authentication.addEventListener("accessTokensExpired", this.handleAccessTokenExpired)
     this.startAuthentication()
   };
 
+
   startAuthentication = async () => {
-    const result = await this.authenticator.checkLogin();
+    await this.authentication.authenticator.checkLogin();
     this.setState({
       loginInitializing: false,
-      authenticated: isUserLoggerIn()
+      authenticated: this.authentication.isUserLoggedIn()
     })
+  };
+
+  handleAccessTokenExpired = async () => {
+    this.setState({
+      loginInitializing: true
+    });
+    await this.authentication.authenticator.logout();
+    await this.startAuthentication()
   }
 
   render = () => {
@@ -48,11 +57,11 @@ class App extends React.Component{
     }
     if(!this.state.authenticated) {
       return <CenteredBox>
-        <Button variant="contained" onClick={() => this.authenticator.initiateLogin()}>Login</Button>
+        <Button variant="contained" onClick={() => this.authentication.authenticator.initiateLogin()}>Login</Button>
       </CenteredBox>
     }
 
-    return <AuthenticationContext.Provider value={this.authenticator}>
+    return <AuthenticationContext.Provider value={this.authentication}>
       <Drawer/>
     </AuthenticationContext.Provider>
   }
