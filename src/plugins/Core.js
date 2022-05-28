@@ -47,16 +47,22 @@ class Core extends React.Component {
       { field: 'col2', headerName: 'Column 2', width: 150 },
     ];
 
-
-    return (
+    return ( <>
         <div><pre>{JSON.stringify(this.state.content, null, 2)}</pre></div>
         <div style={{ height: 300, width: '100%' }}><DataGrid rows={rows} columns={columns} /></div>
-     );
-
-
+     </> );
 
     }
 }
 
+class Prdel extends React.Component {
+    render(){
+        return <Core param="1234"/>
+    }
+}
+
+// this.props.param
+
 export default Core
+export { Prdel as SOmethingElse }
 Core.contextType = AuthenticationContext;

@@ -7,5 +7,6 @@ export default {
     "name": "enforce",
     "label": "Enforce",
     "module": lazy(() => import(`./Core`)),
+    //"module": lazy(() => import(`./Core`).then(({namedExport}) => namedExport)),
 }
 
