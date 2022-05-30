@@ -1,6 +1,6 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
-import core from "./plugins/core.manifest"
+import core, {SomethingElse} from "./plugins/core.manifest"
 
 export default {
     "categories": {
@@ -29,7 +29,7 @@ export default {
     },
     {
         "path": "/core/status/jwt/decode",
-        "plugin": core,
+        "plugin": SomethingElse,
         "category": "core"
     },
     {
