@@ -1,6 +1,7 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
 import core, {SomethingElse} from "./plugins/core.manifest"
+import bob from "./plugins/bob.manifest"
 
 export default {
     "categories": {
@@ -15,6 +16,11 @@ export default {
     {
         "path": "/skeleton/rjsf",
         "plugin": rjsf,
+        "category": "skeleton"
+    },
+    {
+        "path": "/bob",
+        "plugin": bob,
         "category": "skeleton"
     },
     {

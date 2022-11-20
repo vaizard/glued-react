@@ -102,17 +102,6 @@ export default class ClipDrawer extends React.Component {
                 this.addAlert(e.toString(), "error", "Pico nejede to")
             });*/
 
-        this.context.authenticatedFetch('' + endpoint + '/core/status/phpinfo')
-            .then(r => {
-                return r
-            })
-            .then(content => {
-                this.setState({content: content})
-            })
-            .catch((e) => {
-                this.addAlert(e.toString(), "error", "Pico nejede to")
-            })
-
     }
 
     // =================================
@@ -128,8 +117,6 @@ export default class ClipDrawer extends React.Component {
     render() {
         const allRoutes = Object.entries(routes).flatMap(([categoryName, category]) => (category.children)).map((routeConfig) =>
         {
-
-
             const route = <Route path={routeConfig.path} element={React.createElement(routeConfig.element)}/>
             console.log(routeConfig.element)
             return route

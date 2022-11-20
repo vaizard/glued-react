@@ -1,9 +1,9 @@
-import React, {Suspense, lazy} from 'react';
-import AuthenticationContext from "../AuthenticationContext"
+import React from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
+import {endpoint} from "../consts";
 
-const healthPath = "https://10.146.149.186/api/skeleton/health/v1"
+const healthPath = endpoint +  "/api/skeleton/health/v1";
 
 class Skeleton extends React.Component {
 
