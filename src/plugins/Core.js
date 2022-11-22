@@ -4,10 +4,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
 import {DataGrid} from '@mui/x-data-grid';
 import Button from "@mui/material/Button";
+import {endpoint} from "../consts";
 
-const authEnforcePath = "https://gdev.industra.space/api/core/auth/test/fail/v1"
-//const authEnforcePath = "https://10.146.149.186/api/core/status/auth/v1"
-//const authEnforcePath = "https://10.146.149.186/api/core/auth/enforce/v1"
+const authEnforcePath = endpoint + "/api/core/auth/test/fail/v1"
 
 // https://lokalise.com/blog/how-to-internationalize-react-application-using-i18next/
 // https://lokalise.com/blog/react-i18n-intl/
