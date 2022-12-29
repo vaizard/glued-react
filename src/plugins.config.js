@@ -1,7 +1,8 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
-import core, {SomethingElse} from "./plugins/core.manifest"
+import core, {CoreHello, authTestFail} from "./plugins/core.manifest"
 import bob from "./plugins/bob.manifest"
+import CoreAuth from "./plugins/CoreAuth"
 
 export default {
     "categories": {
@@ -29,13 +30,18 @@ export default {
         "category": "skeleton"
     },
     {
+        "path": "/core/hello",
+        "plugin": CoreHello,
+        "category": "core"
+    },
+    {
         "path": "/core/status/jwt/fetch",
         "plugin": core,
         "category": "core"
     },
     {
         "path": "/core/status/jwt/decode",
-        "plugin": SomethingElse,
+        "plugin": core,
         "category": "core"
     },
     {
@@ -64,13 +70,13 @@ export default {
         "category": "core"
     },
     {
-        "path": "/core/auth/test/pass",
-        "plugin": core,
+        "path": "/core/auth/test",
+        "plugin": CoreAuth,
         "category": "core"
     },
     {
         "path": "/core/auth/test/fail",
-        "plugin": core,
+        "plugin": authTestFail,
         "category": "core"
     },
     {

@@ -6,11 +6,13 @@ import {DataGrid} from '@mui/x-data-grid';
 import Button from "@mui/material/Button";
 import {endpoint} from "../consts";
 
-const authEnforcePath = endpoint + "/api/core/auth/test/fail/v1"
+const authEnforcePath = endpoint + "/api/core/auth/test/pass/v1"
+const authFailPath = endpoint + "/api/core/auth/test/fail/v1"
+const authPassPath = endpoint + "/api/core/auth/test/pass/v1"
 
 // https://lokalise.com/blog/how-to-internationalize-react-application-using-i18next/
 // https://lokalise.com/blog/react-i18n-intl/
- 
+
 class Core extends React.Component {
 
 
@@ -24,44 +26,79 @@ class Core extends React.Component {
     componentDidMount() {
     this.context.authenticatedFetch(authEnforcePath)
 	    .then(response => response.json())
-	    .then(content => { this.setState({content: content}) } )
+	    .then(content => { this.setState({contentEnforce: content}) } )
         .catch((e) => {
-            this.addAlert(e.toString(), "error", "An error occured")
+            this.addAlert(e.toString(), "error", "An error occurred.")
         })
+
+    this.context.authenticatedFetch(authFailPath)
+        .then(response => response.json())
+        .then(content => { this.setState({contentFail: content}) } )
+        .catch((e) => {
+            this.addAlert(e.toString(), "error", "An error occurred.")
+        })
+
+    this.context.authenticatedFetch(authPassPath)
+        .then(response => response.json())
+        .then(content => { this.setState({contentPass: content}) } )
+        .catch((e) => {
+            this.addAlert(e.toString(), "error", "An error occurred.")
+        })
+
+
     }
 
-    render(){
-	if (this.state.content === null) { 
+    render() {
+	if (this.state.contentEnforce === null) {
          return <CenteredBox>
              <CircularProgress />
           </CenteredBox>
         }
-	
+
     const rows = [
-      { id: 1, col1: 'Hello', col2: 'World' },
-      { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-      { id: 3, col1: 'MUI', col2: 'is Amazing' },
+      { id: 1, col1: "{authEnforcePath}", col2: "{contentEnforce.message}", col3: "{contentEnforce.request}" },
+      { id: 2, col1: {authFailPath}, col2: "{contentFail.message}", col3: "{contentFail.request}" },
+      { id: 3, col1: {authPassPath}, col2: "{contentPass.message}", col3: "{contentPass.request}" },
     ];
 
     const columns = [
-      { field: 'col1', headerName: 'Column 1', width: 150 },
-      { field: 'col2', headerName: 'Column 2', width: 150 },
-    ];
+      { field: 'col1', headerName: 'Endpoint', width: 150 },
+      { field: 'col2', headerName: 'Message', width: 150 },
+      { field: 'col3', headerName: 'Request', width: 150 },
+    ]
+
 
     return ( <>
-
+        <h1>Authentication tests</h1>
         <div style={{ height: 300, width: '100%' }}><DataGrid rows={rows} columns={columns} /></div>
-        <JSONViewer content={this.state.content} />
+        <JSONViewer content={this.state.contentEnforce} />
+        <JSONViewer content={this.state.contentFail} />
+        <JSONViewer content={this.state.contentPass} />
      </> );
 
     }
 }
 
-class Prdel extends React.Component {
-    render(){
-        return <Core param="1234"/>
+class CoreWelcome extends React.Component {
+    render() {
+        return ( <>
+            <h1>Welcome</h1>
+            <div>This is just a hello message.</div>
+        </> );
     }
 }
+
+
+
+class authTestFail extends React.Component {
+    render() {
+        return ( <>
+            <h1>Auth test fail</h1>
+            <Core param="1234"/>
+        </> );
+    }
+}
+
 
 class JSONViewer extends React.Component {
     constructor(props) {
@@ -83,5 +120,6 @@ class JSONViewer extends React.Component {
 // this.props.param
 
 export default Core
-export { Prdel as SomethingElse }
+export { CoreWelcome as CoreHello, authTestFail as authTestFail }
+
 Core.contextType = AuthenticationContext;
