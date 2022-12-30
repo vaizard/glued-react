@@ -71,9 +71,9 @@ class Core extends React.Component {
     return ( <>
         <h1>Authentication tests</h1>
         <div style={{ height: 300, width: '100%' }}><DataGrid rows={rows} columns={columns} /></div>
-        <JSONViewer content={this.state.contentEnforce} />
-        <JSONViewer content={this.state.contentFail} />
-        <JSONViewer content={this.state.contentPass} />
+        <JSONViewer content={this.state.contentEnforce} label="Enforce JSON"/>
+        <JSONViewer content={this.state.contentFail} label="Fail JSON" />
+        <JSONViewer content={this.state.contentPass} label="Pass JSON" />
      </> );
 
     }
@@ -111,9 +111,12 @@ class JSONViewer extends React.Component {
 
     render() {
         if(!this.state.open){
-            return <Button onClick={() => {this.setState({open: true})}}>Show JSON</Button>
+            return <Button onClick={() => {this.setState({open: true})}}>{this.props.label} ↷</Button>
         }
-        return <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
+        return ( <>
+            <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
+            <Button onClick={() => {this.setState({open: false})}}>{this.props.label} ↶</Button>
+        </>)
     }
 }
 
