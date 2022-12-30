@@ -1,6 +1,6 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
-import core, {CoreHello, authTestFail} from "./plugins/core.manifest"
+import core, {CoreHello, CoreRoutes, CoreAuthUsers, CoreAuthDomains} from "./plugins/core.manifest"
 import bob from "./plugins/bob.manifest"
 import CoreAuth from "./plugins/coreauth.manifest"
 import CoreHealth from "./plugins/corehealth.manifest";
@@ -36,48 +36,18 @@ export default {
         "category": "core"
     },
     {
-        "path": "/core/status/jwt/fetch",
-        "plugin": core,
-        "category": "core"
-    },
-    {
-        "path": "/core/status/jwt/decode",
-        "plugin": core,
-        "category": "core"
-    },
-    {
-        "path": "/core/status/auth",
-        "plugin": core,
-        "category": "core"
-    },
-    {
-        "path": "/core/signin",
-        "plugin": core,
-        "category": "core"
-    },
-    {
-        "path": "/core/signout",
-        "plugin": core,
-        "category": "core"
-    },
-    {
         "path": "/core/auth/users",
-        "plugin": core,
+        "plugin": CoreAuthUsers,
         "category": "core"
     },
     {
         "path": "/core/auth/domains",
-        "plugin": core,
+        "plugin": CoreAuthDomains,
         "category": "core"
     },
     {
-        "path": "/core/auth/test",
+        "path": "/core/auth/status",
         "plugin": CoreAuth,
-        "category": "core"
-    },
-    {
-        "path": "/core/auth/test/fail",
-        "plugin": authTestFail,
         "category": "core"
     },
     {
@@ -86,16 +56,10 @@ export default {
         "category": "core"
     },
     {
-        "path": "/core/routes/list",
-        "plugin": core,
+        "path": "/core/routes",
+        "plugin": CoreRoutes,
         "category": "core"
     },
-    {
-        "path": "/core/routes/tree",
-        "plugin": core,
-        "category": "core"
-    },
-
 
     ]
 }

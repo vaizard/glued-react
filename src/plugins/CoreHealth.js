@@ -1,4 +1,5 @@
 import React from 'react';
+import AuthenticationContext from "../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
 import {endpoint} from "../consts";
@@ -16,21 +17,25 @@ class CoreHealth extends React.Component {
     }
 
     componentDidMount() {
-        fetch(healthPath)
-	    .then(response => response.json())
-	    .then(content => { this.setState({content: content}) } )
+        this.context.authenticatedFetch(healthPath)
+            .then(response => response.json())
+            .then(content => { this.setState({content: content}) } )
+            .catch((e) => {
+                this.addAlert(e.toString(), "error", "An error occurred.")
+            })
     }
 
     render(){
-	if (this.state.content === null) { 
-         return <CenteredBox>
-             <CircularProgress />
-          </CenteredBox>
-        }
+    if (this.state.content === null) {
+        return <CenteredBox>
+            <CircularProgress />
+        </CenteredBox>
+    }
+
     return <div className="jsonSkeletonHealth"><pre>{JSON.stringify(this.state.content, null, 2)}</pre></div>
 
     }
 }
 
-
-export default CoreHealth
+export default CoreHealth;
+CoreHealth.contextType = AuthenticationContext;
