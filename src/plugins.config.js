@@ -2,8 +2,8 @@ import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
 import core, {CoreHello, authTestFail} from "./plugins/core.manifest"
 import bob from "./plugins/bob.manifest"
-import CoreAuth from "./plugins/CoreAuth"
-import CoreHealth from "./plugins/CoreHealth";
+import CoreAuth from "./plugins/coreauth.manifest"
+import CoreHealth from "./plugins/corehealth.manifest";
 
 export default {
     "categories": {
