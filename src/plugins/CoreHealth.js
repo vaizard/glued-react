@@ -3,9 +3,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
 import {endpoint} from "../consts";
 
-const healthPath = endpoint +  "/api/skeleton/health/v1";
+const healthPath = endpoint +  "/api/core/health/v1";
 
-class Skeleton extends React.Component {
+class CoreHealth extends React.Component {
 
 
     constructor(props) {
@@ -33,4 +33,4 @@ class Skeleton extends React.Component {
 }
 
 
-export default Skeleton
+export default CoreHealth

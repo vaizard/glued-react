@@ -3,6 +3,7 @@ import skeleton from "./plugins/skeleton.manifest"
 import core, {CoreHello, authTestFail} from "./plugins/core.manifest"
 import bob from "./plugins/bob.manifest"
 import CoreAuth from "./plugins/CoreAuth"
+import CoreHealth from "./plugins/CoreHealth";
 
 export default {
     "categories": {
@@ -81,7 +82,7 @@ export default {
     },
     {
         "path": "/core/health",
-        "plugin": core,
+        "plugin": CoreHealth,
         "category": "core"
     },
     {
