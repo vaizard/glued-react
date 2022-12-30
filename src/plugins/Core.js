@@ -18,7 +18,6 @@ class Core extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-	        contentEnforce: null,
             contentFail: null,
             contentPass: null
         }

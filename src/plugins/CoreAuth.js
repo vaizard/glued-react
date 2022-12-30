@@ -3,11 +3,14 @@ import AuthenticationContext from "../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
 import {endpoint} from "../consts";
-import JSONViewer from "./Core";
+//import JSONViewer from "./Core";
 import {DataGrid} from "@mui/x-data-grid";
+import Button from "@mui/material/Button";
 
-const authFailPath = endpoint + "/api/core/auth/test/fail/v1"
-const authPassPath = endpoint + "/api/core/auth/test/pass/v1"
+const authFailPath  = endpoint + "/api/core/auth/test/fail/v1"
+const authPassPath  = endpoint + "/api/core/auth/test/pass/v1"
+const authJWTFetch  = endpoint + "/api/core/status/jwt/fetch/v1"
+const authJWTDecode = endpoint + "/api/core/status/jwt/decode/v1"
 
 class CoreAuth extends React.Component {
 
@@ -15,7 +18,10 @@ class CoreAuth extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-	    content: null
+            contentFail: null,
+            contentPass: null,
+            contentJWTFetch: null,
+            contentJWTDecode: null,
         }
     }
 
@@ -34,6 +40,22 @@ class CoreAuth extends React.Component {
             .catch((e) => {
                 this.addAlert(e.toString(), "error", "An error occurred.")
             })
+
+        this.context.authenticatedFetch(authJWTFetch)
+            .then(response => response.json())
+            .then(content => { this.setState({contentJWTFetch: content}) } )
+            .catch((e) => {
+                this.addAlert(e.toString(), "error", "An error occurred.")
+            })
+
+        this.context.authenticatedFetch(authJWTDecode)
+            .then(response => response.json())
+            .then(content => { this.setState({contentJWTDecode: content}) } )
+            .catch((e) => {
+                this.addAlert(e.toString(), "error", "An error occurred.")
+            })
+
+
     }
 
 
@@ -66,12 +88,33 @@ class CoreAuth extends React.Component {
 
 
         return ( <>
-            <h1>Authentication tests</h1>
+            <h1>Authentication status</h1>
             <div style={{ height: 300, width: '100%' }}><DataGrid rows={rows} columns={columns} /></div>
             <JSONViewer content={this.state.contentFail} label="Fail JSON" />
             <JSONViewer content={this.state.contentPass} label="Pass JSON" />
+            <JSONViewer content={this.state.contentJWTFetch} label="JWT BLOB" />
+            <JSONViewer content={this.state.contentJWTDecode} label="JWT JSON" />
         </> );
 
+    }
+}
+
+// TODO duplicated code from core. need to do this somehow so that the extends React.Component is done somehow else
+class JSONViewer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false
+        }
+    }
+    render() {
+        if(!this.state.open){
+            return <Button onClick={() => {this.setState({open: true})}}>{this.props.label} ↷</Button>
+        }
+        return ( <>
+            <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
+            <Button onClick={() => {this.setState({open: false})}}>{this.props.label} ↶</Button>
+        </>)
     }
 }
 
