@@ -6,6 +6,7 @@ import {endpoint} from "../consts";
 //import JSONViewer from "./Core";
 import {DataGrid} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import Link from '@mui/material/Link';
 
 const authFailPath  = endpoint + "/api/core/auth/test/fail/v1"
 const authPassPath  = endpoint + "/api/core/auth/test/pass/v1"
@@ -75,15 +76,17 @@ class CoreAuth extends React.Component {
             let c3 = this.state.contentFail.request.toString();
         }
 
+
         const rows = [
-            { id: 1, col1: authPassPath, col2: this.state.contentPass.message.toString(), col3: this.state.contentPass.request.toString() },
-            { id: 2, col1: authFailPath, col2: c2, col3: c3 },
+            { id: 1, col1: authPassPath, col2: this.state.contentPass.message.toString(), col3: this.state.contentPass.request.toString(), col4: authPassPath },
+            { id: 2, col1: authFailPath, col2: c2, col3: c3, col4: authFailPath },
         ];
 
         const columns = [
-            { field: 'col1', headerName: 'Endpoint', width: '50%' },
+            { field: 'col1', headerName: 'Endpoint', width: 150, renderCell: (params) => <Link href={params.toString()}>fg {params.toString()}</Link> },
             { field: 'col2', headerName: 'Message', width: 150 },
             { field: 'col3', headerName: 'Request', width: 150 },
+            { field: 'col4', headerName: 'Link I want to have in endpoint', width: 450 }
         ]
 
 
