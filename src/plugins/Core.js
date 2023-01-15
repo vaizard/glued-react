@@ -94,18 +94,22 @@ class JSONViewer extends React.Component {
             open: false
         }
     }
+
+    toggleState() {
+        this.setState({
+            open: !this.state.open
+        })
+    }
+
+    arrow = () => this.state.open ? "↶" : "↷";
+
     render() {
-        if(!this.state.open){
-            return <Button onClick={() => {this.setState({open: true})}}>{this.props.label} ↷</Button>
-        }
-        return ( <>
-            <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
-            <Button onClick={() => {this.setState({open: false})}}>{this.props.label} ↶</Button>
-        </>)
+        return <>
+            <Button onClick={() => {this.toggleState()}}>{this.props.label} {this.arrow()}</Button>
+            { this.state.open ? <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 4)}</pre></div> : null}
+        </>
     }
 }
-
-// this.props.param
 
 export default Core
 export { CoreWelcome as CoreHello, JSONViewer }
