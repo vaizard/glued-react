@@ -5,6 +5,8 @@ import CenteredBox from "../tools/CenteredBox";
 import {endpoint} from "../consts";
 import {DataGrid} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import {JSONViewer} from "./Core";
+
 
 const RoutesPath = endpoint + "/api/core/routes/v1"
 
@@ -54,25 +56,6 @@ class CoreRoutes extends React.Component {
             <JSONViewer content={this.state.content} label="JSON" />
         </> );
 
-    }
-}
-
-// TODO doplicate code from core. need to do this somehow so that the extends React.Component is done somehow else
-class JSONViewer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false
-        }
-    }
-    render() {
-        if(!this.state.open){
-            return <Button onClick={() => {this.setState({open: true})}}>{this.props.label} ↷</Button>
-        }
-        return ( <>
-            <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
-            <Button onClick={() => {this.setState({open: false})}}>{this.props.label} ↶</Button>
-        </>)
     }
 }
 

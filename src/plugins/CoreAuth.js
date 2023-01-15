@@ -3,7 +3,7 @@ import AuthenticationContext from "../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../tools/CenteredBox";
 import {endpoint} from "../consts";
-//import JSONViewer from "./Core";
+import {JSONViewer} from "./Core";
 import {DataGrid} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Link from '@mui/material/Link';
@@ -99,25 +99,6 @@ class CoreAuth extends React.Component {
             <JSONViewer content={this.state.contentJWTDecode} label="JWT JSON" />
         </> );
 
-    }
-}
-
-// TODO duplicated code from core. need to do this somehow so that the extends React.Component is done somehow else
-class JSONViewer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false
-        }
-    }
-    render() {
-        if(!this.state.open){
-            return <Button onClick={() => {this.setState({open: true})}}>{this.props.label} ↷</Button>
-        }
-        return ( <>
-            <div className="jsonBlock"><pre>{JSON.stringify(this.props.content, null, 2)}</pre></div>
-            <Button onClick={() => {this.setState({open: false})}}>{this.props.label} ↶</Button>
-        </>)
     }
 }
 

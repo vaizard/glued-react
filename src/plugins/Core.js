@@ -108,6 +108,6 @@ class JSONViewer extends React.Component {
 // this.props.param
 
 export default Core
-export { CoreWelcome as CoreHello }
+export { CoreWelcome as CoreHello, JSONViewer }
 
 Core.contextType = AuthenticationContext;
