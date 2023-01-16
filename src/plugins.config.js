@@ -1,6 +1,6 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
-import core, {CoreHello, CoreRoutes, CoreAuthUsers, CoreAuthDomains} from "./plugins/core.manifest"
+import {CoreHello, CoreRoutes, CoreAuthUsers, CoreAuthDomains} from "./plugins/core.manifest"
 import bob from "./plugins/bob.manifest"
 import CoreAuth from "./plugins/coreauth.manifest"
 import CoreHealth from "./plugins/corehealth.manifest";

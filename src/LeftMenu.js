@@ -16,15 +16,22 @@ import ListItemButton from "@mui/material/ListItemButton";
 import {Fragment} from "react";
 import Authentica from "@zelitomas/authentica.js"
 import {useNavigate} from "react-router-dom";
+import CenteredBox from "./tools/CenteredBox";
+import CenteredLoader from "./tools/CenteredLoader";
 
 const drawerWidth = 360;
 
 export default function LeftMenu(props) {
     const {routes} = props;
+
     let navigate = useNavigate();
     let [openItem, setOpenItem] = useState(null);
+
+    if(routes === null) {
+        return <EmptyMenuDrawer/>
+    }
     let buttons = [];
-    let withoutGroup = null
+    let withoutGroup = null;
     for (const [groupName, groupObject] of Object.entries(routes)) {
         let subButtons = [];
         for (const route of groupObject.children) {
@@ -70,16 +77,7 @@ export default function LeftMenu(props) {
     }
 
 
-    return <Drawer
-        variant="permanent"
-        sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
-        }}
-    >
-        <Toolbar/>
-        <Box sx={{overflow: 'auto'}}>
+    return <MenuDrawer>
             <List>
                 {buttons}
                 {withoutGroup !== null ?
@@ -90,6 +88,28 @@ export default function LeftMenu(props) {
                 : null
                 }
             </List>
+    </MenuDrawer>
+}
+
+function EmptyMenuDrawer() {
+    return <MenuDrawer>
+        <CenteredLoader/>
+    </MenuDrawer>
+}
+
+function MenuDrawer(props) {
+    const {children} = props;
+    return <Drawer
+        variant="permanent"
+        sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+        }}
+    >
+        <Toolbar/>
+        <Box sx={{overflow: 'auto'}}>
+            {children}
         </Box>
     </Drawer>
 }

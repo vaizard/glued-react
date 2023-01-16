@@ -56,9 +56,7 @@ class CoreAuth extends React.Component {
                 this.addAlert(e.toString(), "error", "An error occurred.")
             })
 
-
     }
-
 
     render() {
         if ( this.state.contentPass === null ) {
@@ -72,8 +70,8 @@ class CoreAuth extends React.Component {
         let c3 = 'null';
 
         if ( this.state.contentFail !== null ) {
-            let c2 = this.state.contentFail.message.toString();
-            let c3 = this.state.contentFail.request.toString();
+            c2 = this.state.contentFail.message.toString();
+            c3 = this.state.contentFail.request.toString();
         }
 
 
@@ -83,7 +81,7 @@ class CoreAuth extends React.Component {
         ];
 
         const columns = [
-            { field: 'col1', headerName: 'Endpoint', width: 150, renderCell: (params) => <Link href={params.toString()}>fg {params.toString()}</Link> },
+            { field: 'col1', headerName: 'Endpoint', width: 150, renderCell: (params) => <Link href={params.value}>Endpoint</Link> },
             { field: 'col2', headerName: 'Message', width: 150 },
             { field: 'col3', headerName: 'Request', width: 150 },
             { field: 'col4', headerName: 'Link I want to have in endpoint', width: 450 }
