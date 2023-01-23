@@ -17,7 +17,7 @@ import Stack from "@mui/material/Stack";
 
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
-import {allInternalRoutes, filterRoutes} from "./routes/routes";
+import {allInternalRoutes, filterRoutes, groupEndpoints} from "./routes/routes";
 import CenteredLoader from "./tools/CenteredLoader";
 
 
@@ -37,7 +37,7 @@ export default class Main extends React.Component {
                 return r.json()
             })
             .then(parsedJson => {
-                this.setState({endpoints: parsedJson})
+                this.setState({endpoints: groupEndpoints(parsedJson)})
             })
             .catch((e) => {
                 this.addAlert(e.toString(), "error", "Pico nejede to")
@@ -55,11 +55,11 @@ export default class Main extends React.Component {
         const routes = this.state.endpoints === null ? {} : filterRoutes(allInternalRoutes, this.state.endpoints);
         console.log(routes);
         const allRoutes = Object.entries(routes).flatMap(([categoryName, category]) => (category.children)).map((routeConfig) =>
-        {
-            const route = <Route path={routeConfig.path} element={React.createElement(routeConfig.element)}/>;
-            console.log(routeConfig.element);
-            return route
-        });
+            {
+                const route = <Route path={routeConfig.path} key={routeConfig.path} element={React.createElement(routeConfig.element, {endpoints: this.state.endpoints})}/>;
+                console.log(routeConfig.element);
+                return route
+            });
 
 
         return (<Router>

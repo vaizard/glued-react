@@ -2,7 +2,6 @@ import {lazy} from "react";
 
 const coreHelloPlugin = {
     "requiredResources": [
-        {name: "asdf", methods: ["GET"]}
     ],
     "name": "A hello",
     "label": "Hello",
@@ -13,17 +12,6 @@ const coreHelloPlugin = {
     ),
 }
 
-const coreRoutesPlugin = {
-        "requiredResources": [
-            // resource names required for this plugin to show up in menu
-        ],
-        "name": "Routes",
-        "label": "Routes",
-        //"module": lazy(() => import(`./Core`)),
-        "module": lazy(
-            () => import(`./CoreRoutes`)
-        ),
-    }
 
 const coreAuthUsersPlugin = {
         "requiredResources": [
@@ -56,6 +44,5 @@ const coreAuthDomainsPlugin = {
 
 
 export {coreHelloPlugin as CoreHello}
-export {coreRoutesPlugin as CoreRoutes}
 export {coreAuthUsersPlugin as CoreAuthUsers}
 export {coreAuthDomainsPlugin as CoreAuthDomains}

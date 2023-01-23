@@ -1,0 +1,21 @@
+.forminput {
+    margin: 5px;
+}
+
+.forminput.small {
+    width: calc(50% - 10px);
+}
+
+.forminput.big {
+    width: calc(100% - 10px);
+}
+
+.forminput.third {
+    width: calc(100%/3 - 10px);
+}
+
+.right-aligned {
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
+}

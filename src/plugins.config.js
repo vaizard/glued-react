@@ -1,9 +1,10 @@
 import rjsf from "./plugins/rjsf.manifest"
 import skeleton from "./plugins/skeleton.manifest"
-import {CoreHello, CoreRoutes, CoreAuthUsers, CoreAuthDomains} from "./plugins/core.manifest"
-import bob from "./plugins/bob.manifest"
-import CoreAuth from "./plugins/coreauth.manifest"
-import CoreHealth from "./plugins/corehealth.manifest";
+import {CoreHello, CoreAuthUsers, CoreAuthDomains} from "./plugins/core/core.manifest"
+import CoreRoutes from "./plugins/core/routes.manifest"
+import CoreAuth from "./plugins/core/coreauth.manifest"
+import CoreHealth from "./plugins/core/corehealth.manifest";
+import Annotator from "./plugins/annotator/manifest"
 
 export default {
     "categories": {
@@ -12,6 +13,9 @@ export default {
         },
         "skeleton": {
             "label": "Skeleton"
+        },
+        "finance": {
+            "label": "Finance"
         }
     },
     "plugins": [
@@ -21,9 +25,9 @@ export default {
         "category": "skeleton"
     },
     {
-        "path": "/bob",
-        "plugin": bob,
-        "category": "skeleton"
+        "path": "/annotator/create",
+        "plugin": Annotator,
+        "category": "finance"
     },
     {
         "path": "/skeleton",

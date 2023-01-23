@@ -50,21 +50,23 @@ function groupEndpoints(endpoints) {
         result.set(endpoint.name, endpoint)
     }
     return result
-
 }
 
 /**
  * Filters internal routes based on API endpoints available to the user.
  * Access is determined by the server.
+ *
+ * @param endpoints Object of endpoints from server associated by name.
+ *      You can use groupEndpoints() function to get such object.
+ * @param routes All available routes on client. Usually can be retrieved from variable allInternalRoutes
  */
 function filterRoutes(routes, endpoints) {
-    let endpointsByName = groupEndpoints(endpoints);
-    
+
     return Object.fromEntries(
         Object.entries(routes)
             .map(([key, it]) => {
                 let clone = {...it}
-                clone.children = clone.children.filter((it) => hasCorrectPermission(it, endpointsByName));
+                clone.children = clone.children.filter((it) => hasCorrectPermission(it, endpoints));
                 console.log(clone)
                 return [key, clone]
             }).filter(([key, it]) => it.children.length > 0)
@@ -72,24 +74,21 @@ function filterRoutes(routes, endpoints) {
 }
 
 function hasCorrectPermission(plugin, endpointsByName) {
-    console.log("Hello");
     for (let resource of plugin.requiredResources) {
         if(!endpointsByName.has(resource.name)) {
-            console.log("False :(")
             console.log(plugin)
             return false;
         }
-        const endpoint = endpointsByName(resource.name);
+        console.log(endpointsByName)
+        const endpoint = endpointsByName.get(resource.name);
         for(const method of resource.methods) {
             if(!endpoint.methods.includes(method)) {
-                console.log("False again :( " + method)
                 console.log(plugin)
                 return false
             }
         }
     }
-    console.log("It's me")
     return true;
 }
 
-export { allInternalRoutes, filterRoutes }
+export { allInternalRoutes, filterRoutes, groupEndpoints }

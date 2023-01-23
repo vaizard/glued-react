@@ -1,8 +1,8 @@
 import React from 'react';
-import AuthenticationContext from "../AuthenticationContext"
+import AuthenticationContext from "../../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
-import CenteredBox from "../tools/CenteredBox";
-import {endpoint} from "../consts";
+import CenteredBox from "../../tools/CenteredBox";
+import {endpoint} from "../../consts";
 
 const healthPath = endpoint +  "/api/core/health/v1";
 

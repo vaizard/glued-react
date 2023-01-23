@@ -1,10 +1,10 @@
 import React from 'react';
-import AuthenticationContext from "../AuthenticationContext"
+import AuthenticationContext from "../../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
-import CenteredBox from "../tools/CenteredBox";
+import CenteredBox from "../../tools/CenteredBox";
 import {DataGrid} from '@mui/x-data-grid';
 import Button from "@mui/material/Button";
-import {endpoint} from "../consts";
+import {endpoint} from "../../consts";
 
 const authFailPath = endpoint + "/api/core/auth/test/fail/v1";
 const authPassPath = endpoint + "/api/core/auth/test/pass/v1";

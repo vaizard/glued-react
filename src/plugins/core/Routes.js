@@ -1,22 +1,22 @@
 import React from 'react';
-import AuthenticationContext from "../AuthenticationContext"
+import AuthenticationContext from "../../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
-import CenteredBox from "../tools/CenteredBox";
-import {endpoint} from "../consts";
+import CenteredBox from "../../tools/CenteredBox";
+import {endpoint} from "../../consts";
 import {DataGrid} from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import {JSONViewer} from "./Core";
+import Link from "@mui/material/Link";
 
 
 const RoutesPath = endpoint + "/api/core/routes/v1"
 
-class CoreRoutes extends React.Component {
+class Routes extends React.Component {
 
 
     constructor(props) {
         super(props);
         this.state = {
-	    content: null
+	        content: null
         }
     }
 
@@ -38,21 +38,19 @@ class CoreRoutes extends React.Component {
             </CenteredBox>
         }
 
-        // TODO so, how TF do I iterate over {content} to generate a set of rows? plz for(t)each me
-        const rows = [
-            { id: 1, col1: "i.service", col2: "<a href='i.url'>i.label</a>", col3: "i.dscr" },
-        ];
+        const rows = this.state.content;
 
         const columns = [
-            { field: 'col1', headerName: 'Service', width: '20%' },
-            { field: 'col2', headerName: 'Label', width: '30%' },
-            { field: 'col3', headerName: 'Description', width: '50%' },
-        ]
+            { field: 'name', headerName: 'Name', width: '200'},
+            { field: 'label', headerName: 'Label', width: '300'},
+            { field: 'url', headerName: 'URL', width: '500'},
+            { field: 'dscr', headerName: 'Description', width: '500' },
+        ];
 
 
         return ( <>
             <h1>Routes</h1>
-            <div style={{ height: 300, width: '100%' }}><DataGrid rows={rows} columns={columns} /></div>
+            <div style={{ height: 800, width: '100%' }}><DataGrid rows={rows} columns={columns} getRowId={it => it.name}/></div>
             <JSONViewer content={this.state.content} label="JSON" />
         </> );
 
@@ -60,5 +58,5 @@ class CoreRoutes extends React.Component {
 }
 
 
-export default CoreRoutes
-CoreRoutes.contextType = AuthenticationContext;
+export default Routes
+Routes.contextType = AuthenticationContext;

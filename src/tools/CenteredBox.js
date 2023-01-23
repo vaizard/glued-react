@@ -12,5 +12,22 @@ const CenteredBox = (props) => {
     </Box>
 };
 
+const marginCss = {
+    marginTop: "10px",
+    marginBottom: "10px",
+}
+
+const HorizontalCenteredBox = (props) => {
+    return <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        style={marginCss}
+    >
+        {props?.children}
+    </Box>
+};
 
 export default CenteredBox;
+export {HorizontalCenteredBox}
