@@ -53,6 +53,7 @@ export default class Main extends React.Component {
 
     render() {
         const routes = this.state.endpoints === null ? {} : filterRoutes(allInternalRoutes, this.state.endpoints);
+        const loggedIn = this.context.isUserLoggedIn();
         console.log(routes);
         const allRoutes = Object.entries(routes).flatMap(([categoryName, category]) => (category.children)).map((routeConfig) =>
             {
@@ -79,7 +80,8 @@ export default class Main extends React.Component {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Glued
                         </Typography>
-                        <Button color="inherit" onClick={this.handleLogout}>Logout</Button>
+
+                        <Button color="inherit" onClick={loggedIn ? this.handleLogout : this.handleLogin}>{loggedIn ? "Log out" : "Log in"}</Button>
                     </Toolbar>
                 </AppBar>
 
@@ -111,6 +113,8 @@ export default class Main extends React.Component {
     }
 
     handleLogout = () => this.context.logout();
+    handleLogin = () => this.context.login();
+
 
     addAlert = (text, severity, title) => {
         const newAlert = {

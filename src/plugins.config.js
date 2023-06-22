@@ -1,4 +1,5 @@
 import rjsf from "./plugins/rjsf.manifest"
+import procurement from "./plugins/fare/procurement.manifest"
 import skeleton from "./plugins/skeleton.manifest"
 import {CoreHello, CoreAuthUsers, CoreAuthDomains} from "./plugins/core/core.manifest"
 import CoreRoutes from "./plugins/core/routes.manifest"
@@ -16,6 +17,9 @@ export default {
         },
         "finance": {
             "label": "Finance"
+        },
+        "devices": {
+            "label": "Zdravotnické nástroje"
         }
     },
     "plugins": [
@@ -23,6 +27,11 @@ export default {
         "path": "/skeleton/rjsf",
         "plugin": rjsf,
         "category": "skeleton"
+    },
+    {
+        "path": "/procurement",
+        "plugin": procurement,
+        "category": "devices"
     },
     {
         "path": "/annotator/create",

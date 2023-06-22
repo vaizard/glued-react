@@ -14,6 +14,7 @@ export default class Authentication extends EventTarget {
     isUserLoggedIn = () => isUserLoggedIn();
 
     logout = () => this.authenticator.logout();
+    login = () => this.authenticator.initiateLogin();
 
     authenticatedFetch = async (resource, init) => {
         let response = await this.authenticator.authenticatedFetch(resource, init);

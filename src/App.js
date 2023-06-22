@@ -55,11 +55,12 @@ class App extends React.Component{
           <CircularProgress />
       </CenteredBox>
     }
-    if(!this.state.authenticated) {
+
+    /*if(!this.state.authenticated) {
       return <CenteredBox>
         <Button variant="contained" onClick={() => this.authentication.authenticator.initiateLogin()}>Login</Button>
       </CenteredBox>
-    }
+    }*/
 
     return <AuthenticationContext.Provider value={this.authentication}>
       <Drawer/>
