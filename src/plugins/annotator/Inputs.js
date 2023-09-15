@@ -21,9 +21,7 @@ function eventToValue(event) {
 }
 
 function parseNumber(text) {
-    console.log(text)
     if(!isValidNumber(text)) {return null}
-    console.log(text)
     const result = Number.parseFloat(text);
     if(Number.isNaN(result)) {return null}
     return result;
@@ -48,7 +46,6 @@ class NumericInput extends Component {
 
     handleTextChange = text => {
         const num = parseNumber(text);
-        console.log(num);
         this.props.onValueChange?.(num);
         this.setState({textInput: text});
     }
