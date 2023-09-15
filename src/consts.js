@@ -4,6 +4,7 @@ let endpoint, authenticatorOptions;
 
 if (process.env.NODE_ENV !== 'production') {
     endpoint = "https://gdev.industra.space";
+    //endpoint = "https://fare.nemocnice.local";
     authenticatorOptions = {
         tokenEndpoint: "https://id.industra.space/auth/realms/T1/protocol/openid-connect/token",
         authorizationEndpoint: "https://id.industra.space/auth/realms/t1/protocol/openid-connect/auth",
@@ -21,7 +22,6 @@ if (process.env.NODE_ENV !== 'production') {
         endSessionEndpoint: process.env.REACT_APP_AUTH_ENDSESSION_ENDPOINT,
         clientId: process.env.REACT_APP_AUTH_CLIENT_ID,
     };
-
 }
 
 

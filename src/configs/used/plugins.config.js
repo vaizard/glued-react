@@ -1,0 +1,1 @@
+../available/industra.plugins.config.js

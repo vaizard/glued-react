@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@fakturx/fakturx-parser": "^1.0.0-SNAPSHOT.8",
     "@fontsource/roboto": "^4.5.5",
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.117",
@@ -18,19 +19,22 @@
     "@zelitomas/authentica.js": "1.0.1-SNAPSHOT.19",
     "json5": "^2.2.1",
     "json5-loader": "^4.0.1",
+    "pdfjs-dist": "^3.9.179",
     "print-js": "^1.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^14.2.3",
     "react-icons": "^4.3.1",
     "react-jsonschema-form-material-ui": "^3.0.0-rc.3",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "uuid": "^8.3.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "js-base64": "^2.6.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "ln -s -f ../available/${CONFIG_NAME:-dev}.plugins.config.js src/configs/used/plugins.config.js && react-scripts start",
+    "build": "ln -s -f ../available/$CONFIG_NAME.plugins.config.js src/configs/used/plugins.config.js && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,4 +1,4 @@
-import plugins from "../plugins.config";
+import plugins from "../configs/used/plugins.config";
 
 let allInternalRoutes = {};
 

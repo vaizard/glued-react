@@ -1,16 +1,22 @@
-import rjsf from "./plugins/rjsf.manifest"
-import procurement from "./plugins/fare/procurement.manifest"
-import skeleton from "./plugins/skeleton.manifest"
-import {CoreHello, CoreAuthUsers, CoreAuthDomains} from "./plugins/core/core.manifest"
-import CoreRoutes from "./plugins/core/routes.manifest"
-import CoreAuth from "./plugins/core/coreauth.manifest"
-import CoreHealth from "./plugins/core/corehealth.manifest";
-import Annotator from "./plugins/annotator/manifest"
+import rjsf from "../../plugins/rjsf.manifest"
+import procurement from "../../plugins/fare/procurement.manifest"
+import skeleton from "../../plugins/skeleton.manifest"
+import {CoreHello, CoreAuthUsers, CoreAuthDomains} from "../../plugins/core/core.manifest"
+import CoreRoutes from "../../plugins/core/routes.manifest"
+import CoreAuth from "../../plugins/core/coreauth.manifest"
+import CoreHealth from "../../plugins/core/corehealth.manifest";
+import Annotator from "../../plugins/annotator/manifest"
+import Attachments from "../../plugins/debug/attachments.manifest"
+import Products from "../../plugins/coffee/products.manifest"
+import Packlists from "../../plugins/fare/packlists.manifest"
 
 export default {
     "categories": {
         "core": {
             "label": "Core"
+        },
+        "debug": {
+            "label": "Debug"
         },
         "skeleton": {
             "label": "Skeleton"
@@ -20,6 +26,9 @@ export default {
         },
         "devices": {
             "label": "Zdravotnické nástroje"
+        },
+        "coffee": {
+            "label": "Kavárna"
         }
     },
     "plugins": [
@@ -73,6 +82,21 @@ export default {
         "plugin": CoreRoutes,
         "category": "core"
     },
+    {
+        "path": "/debug/attachments",
+        "plugin": Attachments,
+        "category": "Debug"
+    },
+        {
+            path: "/packlists",
+            plugin: Packlists,
+            category: "fare"
+        },
+        {
+            path: "/coffee/products",
+            plugin: Products,
+            category: "coffee"
+        },
 
     ]
 }

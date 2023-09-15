@@ -1,10 +1,7 @@
-import Button from '@mui/material/Button';
-import Drawer from './Main'
+import Main from './Main'
 import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "./tools/CenteredBox";
-import Authenticator from "@zelitomas/authentica.js";
-import {authenticatorOptions} from "./consts";
 import AuthenticationContext from "./AuthenticationContext"
 
 import '@fontsource/roboto/300.css';
@@ -12,6 +9,9 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Authentication from "./Authentication";
+
+import "./App.css"
+import Drawer from "@mui/material/Drawer/Drawer";
 
 
 class App extends React.Component{
@@ -63,7 +63,7 @@ class App extends React.Component{
     }*/
 
     return <AuthenticationContext.Provider value={this.authentication}>
-      <Drawer/>
+      <Main/>
     </AuthenticationContext.Provider>
   }
 

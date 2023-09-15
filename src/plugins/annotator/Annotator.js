@@ -13,6 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import AuthenticationContext from "../../AuthenticationContext";
 import printJS from "print-js";
 import {LoadingButton} from "@mui/lab";
+import Printer from "../../printer"
 
 /**
  * Enum of saving state
@@ -40,6 +41,7 @@ class Annotator extends React.Component {
         this.state = structuredClone(this.defaultState)
         this.state.uuid = crypto.randomUUID();
         this.saveEndpoint = props.endpoints.get("be_stor_annotations_v1").url;
+        this.printer = new Printer("https://api.tomaszelina.cz/pdf")
     }
 
     reset() {
@@ -70,7 +72,7 @@ class Annotator extends React.Component {
             console.log(e)
         }
         if(result?.ok) {
-            this.setState({saveState: SaveState.Saved, printUrl: "https://api.tomaszelina.cz/pdf/generictext/eyJ0ZXh0Ijoic3NzcyJ9"})
+            this.setState({saveState: SaveState.Saved, printUrl: this.printer.getUrl("generictext", {text: "Test"})})
         } else {
             this.setState({saveState: SaveState.Errored})
             console.log(result)

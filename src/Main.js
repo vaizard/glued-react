@@ -19,6 +19,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import {allInternalRoutes, filterRoutes, groupEndpoints} from "./routes/routes";
 import CenteredLoader from "./tools/CenteredLoader";
+import Table from "./Table.tsx";
 
 
 export default class Main extends React.Component {
@@ -61,6 +62,8 @@ export default class Main extends React.Component {
                 console.log(routeConfig.element);
                 return route
             });
+
+        //return <Table/>;
 
 
         return (<Router>
