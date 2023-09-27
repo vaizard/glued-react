@@ -1,10 +1,5 @@
 import React from 'react';
 import AuthenticationContext from "../../AuthenticationContext"
-import * as pdf from "pdfjs-dist/build/pdf";
-// noinspection ES6UnusedImports
-import * as worker from "pdfjs-dist/build/pdf.worker.entry"
-import Dropzone from "react-dropzone";
-import {Paper} from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -14,9 +9,11 @@ import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import DownloadIcon from '@mui/icons-material/Download';
 import {downloadUnit8Array} from "./utils";
-import * as fakturXPackage from "@fakturx/fakturx-parser"
+import {getPDFAttachment} from "./pdf/pdf";
+import DropBox from "../../components/DropBox";
+import {parseAttachment, selectAttachment} from "../facturx/parser";
+//import {parseAttachment, selectAttachment} from "../facturx/parser";
 
-const FakturXTest = fakturXPackage.cz.vybehpelikanu.fakturx.FakturXtest
 
 
 class PDFAttachment extends React.Component {
@@ -30,8 +27,6 @@ class PDFAttachment extends React.Component {
     }
 
     onDrop = (files) => {
-        window.dropped = files
-
         this.setState({content: files})
     };
 
@@ -41,17 +36,7 @@ class PDFAttachment extends React.Component {
 
     render() {
         if(this.state.content === null) {
-            return <Dropzone onDrop={this.onDrop}>
-                {({getRootProps, getInputProps, isFocused, isDragAccept, isDragReject}) => (
-
-                    <div {...getRootProps({className: 'dropzone'})}>
-                        <DropBox focused={isFocused} accepting={isDragAccept} rejecting={isDragReject}/>
-                        <input {...getInputProps()} />
-                    </div>
-
-                )}
-            </Dropzone>
-
+            return <DropBox onDrop={this.onDrop} />
         }
 
         return <Stack spacing={2}>
@@ -75,16 +60,13 @@ class DocumentAttachmentViewer extends React.Component {
     }
 
     componentDidMount() {
-        this.loadPdf().then((attachments) => {
-            window.attachments = attachments
-            const decoder = new TextDecoder()
-            const xmlParser = new FakturXTest()
+
+        getPDFAttachment(this.props.file).then((attachments) => {
+
             try {
-                if(attachments !== null) {
-                    window.parsed = Object.entries(attachments)
-                         .map(([name, file]) => (decoder.decode(file.content)))
-                         .map((text) => (xmlParser.decodeXml(text)))
-                }
+                const attachment = selectAttachment(attachments)
+                window.parsed = parseAttachment(attachment)
+                alert(window.parsed.totalPrice)
 
             } catch (e) {
 
@@ -94,12 +76,6 @@ class DocumentAttachmentViewer extends React.Component {
         }).catch((reason) => {
             this.setState({ error: reason, processing: false})
         })
-    }
-
-    async loadPdf() {
-        let arrayBuffer = await this.props.file.arrayBuffer()
-        let parsedPdf = await pdf.getDocument(arrayBuffer).promise
-        return await parsedPdf.getAttachments()
     }
 
     downloadAttachment = async (name) => {
@@ -146,18 +122,6 @@ class DocumentAttachmentViewer extends React.Component {
     }
 }
 
-function DropBox(props) {
-    //alert(props.focused)
-    return <Paper
-        elevation={props.accepting ? 3 : 1}
-        style={{
-            textAlign: 'center',
-            padding: '40px',
-        }}
-    >
-        Sem přetáhněte soubory
-    </Paper>
-}
 
 
 export default PDFAttachment

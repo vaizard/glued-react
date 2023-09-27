@@ -1,1 +1,1 @@
-../available/industra.plugins.config.js
+../available/dev.plugins.config.js

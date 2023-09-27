@@ -1,4 +1,4 @@
-import Form from '@rjsf/material-ui/v5';
+import Form from '@rjsf/mui';
 import React from "react";
 import ListItem from "@mui/material/ListItem";
 import {v4 as uuidv4} from 'uuid';

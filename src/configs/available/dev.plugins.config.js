@@ -9,6 +9,7 @@ import Annotator from "../../plugins/annotator/manifest"
 import Attachments from "../../plugins/debug/attachments.manifest"
 import Products from "../../plugins/coffee/products.manifest"
 import Packlists from "../../plugins/fare/packlists.manifest"
+import FakturX from "../../plugins/facturx/fakturx.manifest"
 
 export default {
     "categories": {
@@ -96,6 +97,11 @@ export default {
             path: "/coffee/products",
             plugin: Products,
             category: "coffee"
+        },
+        {
+            path: "/fakturx/manual",
+            plugin: FakturX,
+            category: "fenix"
         },
 
     ]

@@ -1,11 +1,12 @@
+import React from "react";
 import {Component, createRef, LegacyRef, RefObject} from "react";
 import "./Table.css"
 
 class Table extends Component<any, any>{
     ref: RefObject<HTMLTableSectionElement>
-    observer: ResizeObserver = null
+    observer: ResizeObserver | null = null
 
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         this.ref = createRef()
 
@@ -21,11 +22,12 @@ class Table extends Component<any, any>{
 
     componentDidMount() {
         this.observer = new ResizeObserver(this.handleSizeChange)
+        // @ts-ignore
         this.observer.observe(this.ref.current, {})
     }
 
     componentWillUnmount() {
-        this.observer.disconnect()
+        this.observer?.disconnect()
     }
 
     handleSizeChange: ResizeObserverCallback = (entries) => {
@@ -51,6 +53,8 @@ class Table extends Component<any, any>{
     }
 }
 
+
+// @ts-ignore
 function Boxes({count, height}) {
     return <div>
         {
@@ -67,12 +71,13 @@ function* range(upperBound: number) {
     }
 }
 
-class ReadOnlyTableRow<T, X> {
-    readonly id: string
-    readonly label: string
-    readonly width: string
-    readonly render: (T) => null
-    readonly getValue: (T) => X
+abstract class ReadOnlyTableRow<T, X> {
+    readonly id: string = ""
+    readonly label: string = ""
+    readonly width: string = ""
+    abstract readonly render: (arg0: T) => null
+    abstract readonly getValue: (arg0: T) => X
+
 }
 
 export default Table;
