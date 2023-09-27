@@ -8,7 +8,7 @@ React Client / UI for the Glued project.
 ### This little bugger
 
 ```sh
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
 sudo apt-get install -y nodejs
 sudo npm install -g create-react-app
 npx create-react-app glued
