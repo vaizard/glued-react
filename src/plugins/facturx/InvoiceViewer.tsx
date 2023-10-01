@@ -39,7 +39,6 @@ export function PricingView(props: InvoiceViewerProps): JSX.Element {
         { headerName: 'Počet', width: 100, valueGetter: (params) => params.row.count, type: "number", field: "count" },
         { headerName: 'Jednotková cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(row)?.grossPrice ), type: "string", field: "grossPrice" },
         { headerName: 'Konečná cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(row)?.total ), type: "string", field: "unitPrice" },
-        { headerName: 'Konečná cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(row)?.total ), type: "string", field: "unitPrice" }
     ];
 
 
