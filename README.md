@@ -5,20 +5,27 @@ Well, this project is not documented *yet*.
 React Client / UI for the Glued project.
 
 
-### This little bugger
+## Start
 
-```sh
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
-sudo apt-get install -y nodejs
-sudo npm install -g create-react-app
-npx create-react-app glued
-cd glued
+```bash
+yarn install
 npm start
-npm install @mui/material @emotion/react @emotion/styled
-npm install @mui/icons-material
-# modify App.js
-# remove Logo.svg
 ```
+
+## Build
+Set following env variables:
+ * `REACT_APP_ENDPOINT`
+ * `REACT_APP_AUTH_TOKEN_ENDPOINT`
+ * `REACT_APP_AUTH_CLIENT_ID`
+ * `REACT_APP_AUTH_ENDSESSION_ENDPOINT`
+ * `REACT_APP_AUTH_ENDPOINT`
+
+Create correct config in src/config/available and reference it during build
+
+```bash
+CONFIG_NAME=industra npm run build 
+```
+
 
 ### Tom TODOs
 > Tom disagrees. Those are Pavels TODOs ;)
