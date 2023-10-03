@@ -1498,10 +1498,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.50.0.tgz#9e93b850f0f3fa35f5fa59adfd03adae8488e484"
   integrity sha512-NCC3zz2+nvYd+Ckfh87rA47zfu2QsQpvc6k1yzTk+b9KzRj0wkGa8LSoGOXN6Zv4lRf/EIoZ80biDh9HOI+RNQ==
 
-"@fakturx/fakturx-parser@^1.0.0-SNAPSHOT.13":
-  version "1.0.0-SNAPSHOT.13"
-  resolved "https://gitlab.com/api/v4/projects/48222592/packages/npm/@fakturx/fakturx-parser/-/@fakturx/fakturx-parser-1.0.0-SNAPSHOT.13.tgz#ff32c8bf9380d7f8266fee241124943a4aeb0858"
-  integrity sha1-/zLIv5OA1/gmb+4kESSUOkrrCFg=
+"@fakturx/fakturx-parser@^1.0.0-SNAPSHOT.16":
+  version "1.0.0-SNAPSHOT.16"
+  resolved "https://gitlab.com/api/v4/projects/48222592/packages/npm/@fakturx/fakturx-parser/-/@fakturx/fakturx-parser-1.0.0-SNAPSHOT.16.tgz#4abdc753ec0f061bb2f94dd23d50ed85ee96e629"
+  integrity sha1-Sr3HU+wPBhuy+U3SPVDthe6W5ik=
 
 "@floating-ui/core@^1.4.2":
   version "1.5.0"
@@ -6791,6 +6791,11 @@ js-base64@^3.7.5:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.5.tgz#21e24cf6b886f76d6f5f165bfcd69cc55b9e3fca"
   integrity sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==
+
+js-sha256@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.10.1.tgz#b40104ba1368e823fdd5f41b66b104b15a0da60d"
+  integrity sha512-5obBtsz9301ULlsgggLg542s/jqtddfOpV5KJc4hajc9JV8GeY2gZHSVpYBn4nWqAUTJ9v+xwtbJ1mIBgIH5Vw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

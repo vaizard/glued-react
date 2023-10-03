@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fakturx/fakturx-parser": "^1.0.0-SNAPSHOT.13",
+    "@fakturx/fakturx-parser": "^1.0.0-SNAPSHOT.16",
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.11",
     "@mui/lab": "^5.0.0-alpha.146",
@@ -21,6 +21,7 @@
     "@types/react-dom": "^18.2.7",
     "@zelitomas/authentica.js": "1.0.1-SNAPSHOT.19",
     "js-base64": "^3.7.5",
+    "js-sha256": "^0.10.1",
     "json5": "^2.2.3",
     "json5-loader": "^4.0.1",
     "pdfjs-dist": "^3.11.174",

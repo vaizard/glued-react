@@ -104,6 +104,8 @@ dist
 .tern-port
 
 
+
 .idea
 /build
 *.iml
+/src/configs/used/plugins.config.js

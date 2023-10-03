@@ -1,16 +1,20 @@
 import {cz} from "@fakturx/fakturx-parser";
-import Invoice = cz.vybehpelikanu.fakturx.fold.Invoice;
 import Stack from "@mui/material/Stack";
-import {ToggleButton, ToggleButtonGroup} from "@mui/material";
-import React, {useState} from "react";
+import {ToggleButton, ToggleButtonGroup, Tooltip} from "@mui/material";
+import React, {ReactElement, useState} from "react";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import Invoice = cz.vybehpelikanu.fakturx.fold.Invoice;
 import Billable = cz.vybehpelikanu.fakturx.fold.Billable;
 import Compound = cz.vybehpelikanu.fakturx.fold.Compound;
 import CalculatedPrice = cz.vybehpelikanu.fakturx.fold.CalculatedPrice;
 import Item = cz.vybehpelikanu.fakturx.fold.Item;
+import { sha256 } from 'js-sha256';
+import BuyerOrder = cz.vybehpelikanu.fakturx.fold.BuyerOrder;
+import {formatDate} from "./utils";
+import hsCodes from "./hsCodes.json";
 
 
-export default function InvoiceViewer({invoice}: InvoiceViewerProps) : JSX.Element {
+export default function InvoiceViewer({invoice}: InvoiceViewerProps) : ReactElement {
     const [view, setView] = useState<ViewType>("pricing")
     return <Stack>
         <ToggleButtonGroup
@@ -30,15 +34,40 @@ export default function InvoiceViewer({invoice}: InvoiceViewerProps) : JSX.Eleme
     </Stack>
 }
 
-export function PricingView(props: InvoiceViewerProps): JSX.Element {
-    const rows: NumberedBillable[] = createRows(props.invoice)
+const MAX_SVG = 1401
 
-    const columns: GridColDef<NumberedBillable>[] = [
-        { headerName: '#', width: 100, valueGetter: (params) => params.row.line, type: "string", field: "line" },
-        { headerName: 'Název', width: 300, valueGetter: (params) => params.row.name, type: "string", field: "name" },
-        { headerName: 'Počet', width: 100, valueGetter: (params) => params.row.count, type: "number", field: "count" },
-        { headerName: 'Jednotková cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(row)?.grossPrice ), type: "string", field: "grossPrice" },
-        { headerName: 'Konečná cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(row)?.total ), type: "string", field: "unitPrice" },
+interface OrderMojiProps { invoice: string | undefined, date: string | undefined }
+
+function OrderMoji({invoice, date}: OrderMojiProps): ReactElement {
+    if(invoice == undefined || date == undefined ) {
+        return <></>
+    }
+    const hash = sha256(invoice + date).slice(-6)
+
+    const emojiOrdinal = parseInt(hash, 16) % MAX_SVG
+    const emojiUrl = process.env.PUBLIC_URL + '/emoji/' + emojiOrdinal + '.svg';
+    const humanName = `${invoice} ze dne ${formatDate(date)}`
+
+    return <Tooltip arrow={true} title={ humanName } >
+        <img style={ { display: "inline-block", height: "2em" } } alt={humanName} src={emojiUrl} />
+    </Tooltip>
+}
+
+
+
+export function PricingView(props: InvoiceViewerProps): ReactElement {
+    const lines = createRows(props.invoice)
+    const rows = fillGaps(lines)
+
+    const columns: GridColDef<BillableLine>[] = [
+        { headerName: '#', width: 100, valueGetter: ({row}) => row.line, type: "string", field: "line" },
+        { headerName: 'Obj', width: 50, valueGetter: ({row}) => orderToString(asItem(row)?.orderReference), type: "string", field: "order", renderCell: ({row}) => <OrderMoji invoice={asItem(row)?.orderReference?.number} date={asItem(row)?.orderReference?.date} />},
+        { headerName: 'SKU', width: 120, valueGetter: ({row}) => asItem(row)?.sku, type: "string", field: "sku" },
+        { headerName: 'Sériová čísla', width: 120, valueGetter: ({row}) => asItem(row)?.serialNumbers, type: "string", field: "serialNumbers" },
+        { headerName: 'Název', width: 350, valueGetter: ({row}) => asItem(row)?.name, type: "string", field: "name" },
+        { headerName: 'Počet', width: 50, valueGetter: ({row}) => asItem(row)?.count, type: "number", field: "count" },
+        { headerName: 'Jednotková cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(asItem(row))?.grossPrice ), type: "string", field: "grossPrice" },
+        { headerName: 'Konečná cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(asItem(row))?.total ), type: "string", field: "unitPrice" },
     ];
 
 
@@ -46,26 +75,31 @@ export function PricingView(props: InvoiceViewerProps): JSX.Element {
 
 }
 
+const orderToString = (order: BuyerOrder | null | undefined) => order != null ? order.number + order.date : null
+
 export function CustomsView(props: InvoiceViewerProps): JSX.Element {
     const data = unpack(props.invoice)
     const rows = summarize(data)
     const columns: GridColDef<Summary>[]  = [
         { headerName: 'Země', width: 100, valueGetter: (params) => params.row.countryOfOrigin, type: "string", field: "country" },
-        { headerName: 'Kód', width: 300, valueGetter: (params) => params.row.customsCode, type: "string", field: "hscode" },
-        { headerName: 'Váha (g)', width: 200, valueGetter: (params) => params.row.weight, renderCell: (params) => params.value + " g",  type: "number", field: "weight" },
+        { headerName: 'Kód', width: 150, valueGetter: (params) => params.row.customsCode, type: "string", field: "hscode" },
+        { headerName: 'Název', width: 600, valueGetter: (params) => params.row.customsName, type: "string", field: "hsname" },
+        { headerName: 'Váha (g)', width: 100, valueGetter: (params) => params.row.weight, renderCell: (params) => params.value + " g",  type: "number", field: "weight" },
     ];
 
     return <DataGrid rows={rows} columns={columns} getRowId={it => it.countryOfOrigin + it.customsCode}/>
 
 }
 
-interface InvoiceViewerProps {
+export interface InvoiceViewerProps {
     invoice: Invoice
 }
 
 type ViewType = "pricing" | "customs"
 
-type NumberedBillable = Billable & { number: number }
+interface Numbered { number: number }
+
+type NumberedBillable = Billable & Numbered
 
 function createRows(invoice: Invoice): NumberedBillable[] {
     return unpack(invoice).map((it, index) => {
@@ -73,6 +107,39 @@ function createRows(invoice: Invoice): NumberedBillable[] {
         it["number"] = index
         return it as NumberedBillable
     } )
+}
+
+type InvalidLine = Numbered & {
+    line: string
+}
+
+type BillableLine = NumberedBillable | InvalidLine
+
+function asBillable(line: BillableLine): NumberedBillable | null {
+    return line instanceof Billable ? line : null
+}
+
+function fillGaps(original: NumberedBillable[]): BillableLine[] {
+    if(original.length == 0) {
+        return []
+    }
+    const result: BillableLine[] = []
+    let index: number | null = null
+    for(let line of original) {
+        const lineString = line?.line
+        const actualLineNumber = lineString == null ? null : parseInt(lineString, 10)
+        const expectedLineNumber = index == null ? null : index + 1;
+        if(actualLineNumber != null && expectedLineNumber != null && expectedLineNumber < actualLineNumber) {
+            for(let i = expectedLineNumber; i < actualLineNumber; i++) {
+                result.push({line: "Missing " + i, number: -i})
+            }
+        }
+
+        index = actualLineNumber
+        result.push(line)
+    }
+
+    return result
 }
 
 function unpack(it: Billable): Billable[] {
@@ -83,7 +150,7 @@ function unpack(it: Billable): Billable[] {
 
 }
 
-function getPricePerUnit(billable: Billable): CalculatedPrice | null {
+function getPricePerUnit(billable: Billable | null): CalculatedPrice | null {
     if(billable instanceof Item) {
         return billable.pricePerUnit
     }
@@ -94,6 +161,7 @@ interface Summary {
     weight: number,
     customsCode: string,
     countryOfOrigin: string,
+    customsName: string | undefined
 }
 
 // Todo: use items
@@ -109,11 +177,16 @@ function summarize(it: Billable[]): Summary[] {
                 .map(it => itemize(it))
                 .map(it => (it?.count ?? 1) * (it?.gramsPerUnit ?? 0))
                 .reduce((partialSum, a) => partialSum + a, 0)
-            return {weight: sum, customsCode: customsCode, countryOfOrigin: country}
+            return {countryOfOrigin: country, customsCode: customsCode, customsName: hsCodes[customsCode as keyof typeof hsCodes]?.nameCZ, weight: sum}
         })
     )
 
 
+}
+
+function asItem(it: BillableLine) {
+    const billable = asBillable(it)
+    return billable && itemize(billable)
 }
 
 function itemize(it: Billable): Item | null {
