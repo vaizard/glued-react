@@ -37,7 +37,7 @@ export default function ManualInvoiceUpload(): JSX.Element {
         return <CenteredLoader />;
     }
 
-    return <InvoiceViewer invoice={invoice}/>
+    return <InvoiceViewer invoice={invoice} onClose={() => setFile(null)}/>
 
 }
 

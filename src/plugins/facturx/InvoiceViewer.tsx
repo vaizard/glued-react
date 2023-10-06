@@ -12,20 +12,25 @@ import { sha256 } from 'js-sha256';
 import BuyerOrder = cz.vybehpelikanu.fakturx.fold.BuyerOrder;
 import {formatDate} from "./utils";
 import hsCodes from "./hsCodes.json";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from '@mui/icons-material/Close';
 
 
-export default function InvoiceViewer({invoice}: InvoiceViewerProps) : ReactElement {
+export default function InvoiceViewer({invoice, onClose}: InvoiceViewerProps) : ReactElement {
     const [view, setView] = useState<ViewType>("pricing")
     return <Stack>
-        <ToggleButtonGroup
-            color="primary"
-            value={ view }
-            exclusive
-            onChange={ (_, value) => setView(value) }
-        >
-            <ToggleButton value="pricing">Ceny</ToggleButton>
-            <ToggleButton value="customs">Dovoz</ToggleButton>
-        </ToggleButtonGroup>
+        <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
+            <ToggleButtonGroup
+                color="primary"
+                value={ view }
+                exclusive
+                onChange={ (_, value) => setView(value) }
+            >
+                <ToggleButton value="pricing">Ceny</ToggleButton>
+                <ToggleButton value="customs">Dovoz</ToggleButton>
+            </ToggleButtonGroup>
+            { onClose !== undefined && <IconButton onClick={onClose}><CloseIcon/></IconButton> }
+        </Stack>
         <div style={{ height: 800, width: '100%' }}>
             { view == "pricing" && <PricingView invoice={invoice} /> }
             { view == "customs" && <CustomsView invoice={invoice} /> }
@@ -92,7 +97,8 @@ export function CustomsView(props: InvoiceViewerProps): JSX.Element {
 }
 
 export interface InvoiceViewerProps {
-    invoice: Invoice
+    invoice: Invoice,
+    onClose?: () => void
 }
 
 type ViewType = "pricing" | "customs"
