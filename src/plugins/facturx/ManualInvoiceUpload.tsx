@@ -7,8 +7,6 @@ import CenteredLoader from "../../tools/CenteredLoader";
 import InvoiceViewer from "./InvoiceViewer";
 import Invoice = cz.vybehpelikanu.fakturx.fold.Invoice;
 
-// TODO: fix anys
-
 
 export default function ManualInvoiceUpload(): JSX.Element {
     const [files, setFile] = useState<File[] | null>(null)
@@ -22,9 +20,7 @@ export default function ManualInvoiceUpload(): JSX.Element {
         }
 
         const attachments = (await Promise.all(files.map(it => getPDFAttachment(it)))).flatMap(Object.entries)
-        console.log(attachments)
         const attachment = selectAttachment(attachments)
-        console.log(attachment)
         const invoice = parseAttachment(attachment)
         setInvoice(invoice)
     }
