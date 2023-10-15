@@ -1,23 +1,57 @@
 import {cz} from "@fakturx/fakturx-parser";
 import Stack from "@mui/material/Stack";
-import {ToggleButton, ToggleButtonGroup, Tooltip} from "@mui/material";
+import {ToggleButton, ToggleButtonGroup} from "@mui/material";
 import React, {ReactElement, useState} from "react";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import hsCodes from "./hsCodes.json";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from '@mui/icons-material/Close';
+import OrderMoji from "./OrderMoji";
+import OrderSummary from "./OrderSummary";
+import {DeepMap, doubleGroup, max, multiGroup, notNull} from "./utils";
+import {sha256} from "js-sha256";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import AlertTitle from "@mui/material/AlertTitle";
 import Invoice = cz.vybehpelikanu.fakturx.fold.Invoice;
 import Billable = cz.vybehpelikanu.fakturx.fold.Billable;
 import Compound = cz.vybehpelikanu.fakturx.fold.Compound;
 import CalculatedPrice = cz.vybehpelikanu.fakturx.fold.CalculatedPrice;
 import Item = cz.vybehpelikanu.fakturx.fold.Item;
-import { sha256 } from 'js-sha256';
 import BuyerOrder = cz.vybehpelikanu.fakturx.fold.BuyerOrder;
-import {formatDate} from "./utils";
-import hsCodes from "./hsCodes.json";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from '@mui/icons-material/Close';
+import DiscountReason = cz.vybehpelikanu.fakturx.fold.discounts.DiscountReason;
+import ChargeOrDiscount = cz.vybehpelikanu.fakturx.fold.discounts.ChargeOrDiscount;
+import Money = cz.vybehpelikanu.fakturx.money.Money;
 
+
+function InvalidInvoiceWarning(props: {
+    onClose?: () => void; onAccept?: () => void, expected: Money, actual: Money
+}) {
+
+    return <Alert
+        severity="warning"
+        action={
+            <Stack gap={1} direction="row" alignItems={"center"}>
+                <Button color="inherit" size="small" onClick={props.onAccept}>
+                    RISKNU TO, ZOBRAZ FAKTURU
+                </Button>
+                <IconButton color="inherit" size="small" onClick={props.onClose}>
+                    <CloseIcon />
+                </IconButton>
+            </Stack>
+        }
+    >
+        <AlertTitle>Chybné součty</AlertTitle>
+        Pozor! Výpočet Fénixu nesedí s výpočtem KLS! Faktury se liší o { props.expected.minus(props.actual).toString() }!
+        Data zobrazená v aplikaci mohou být zkreslená, doporučujeme fakturu přepočítat ručně!
+    </Alert>
+}
 
 export default function InvoiceViewer({invoice, onClose}: InvoiceViewerProps) : ReactElement {
-    const [view, setView] = useState<ViewType>("pricing")
+    const [view, setView] = useState<ViewType>( invoice.expectedTotal.equals(invoice.totalPrice) ? "pricing" : "invalid")
+    if(view == "invalid") {
+        return <InvalidInvoiceWarning onClose={onClose} onAccept={() => setView("pricing")} expected={invoice.expectedTotal} actual={invoice.totalPrice} />
+    }
     return <Stack>
         <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
             <ToggleButtonGroup
@@ -28,40 +62,96 @@ export default function InvoiceViewer({invoice, onClose}: InvoiceViewerProps) : 
             >
                 <ToggleButton value="pricing">Ceny</ToggleButton>
                 <ToggleButton value="customs">Dovoz</ToggleButton>
+                <ToggleButton value="overview">Přehled</ToggleButton>
             </ToggleButtonGroup>
             { onClose !== undefined && <IconButton onClick={onClose}><CloseIcon/></IconButton> }
         </Stack>
         <div style={{ height: 800, width: '100%' }}>
             { view == "pricing" && <PricingView invoice={invoice} /> }
             { view == "customs" && <CustomsView invoice={invoice} /> }
+            { view == "overview" && <OrderSummary invoice={invoice} /> }
         </div>
 
     </Stack>
 }
 
-const MAX_SVG = 1401
-
-interface OrderMojiProps { invoice: string | undefined, date: string | undefined }
-
-function OrderMoji({invoice, date}: OrderMojiProps): ReactElement {
-    if(invoice == undefined || date == undefined ) {
-        return <></>
-    }
-    const hash = sha256(invoice + date).slice(-6)
-
-    const emojiOrdinal = parseInt(hash, 16) % MAX_SVG
-    const emojiUrl = process.env.PUBLIC_URL + '/emoji/' + emojiOrdinal + '.svg';
-    const humanName = `${invoice} ze dne ${formatDate(date)}`
-
-    return <Tooltip arrow={true} title={ humanName } >
-        <img style={ { display: "inline-block", height: "2em" } } alt={humanName} src={emojiUrl} />
-    </Tooltip>
+interface Hashable {
+    hashCode(): number,
+    equals(other: any): boolean
 }
 
+function sumByHash<T extends Hashable>(original: T[]) {
+    let intermediate: Map<number, [T, number][]> = new Map()
+    for(const item of original) {
+        const hash = item.hashCode()
+        const array = intermediate.get(hash) ?? []
+        let newMember = array.find(it => it[0].equals(item))
+        if(newMember === undefined) {
+            newMember = [item, 0]
+            array.push(newMember)
+        }
+        newMember[1] = newMember[1] + 1
 
+        intermediate.set(hash, array)
+    }
+    return Array.from(intermediate.values()).flatMap(it => it)
+}
+
+const reasonNames = {
+    "LineDiscount": "Řádková sleva",
+    "InvoiceDiscount": "Sleva na fakturu",
+    "Sconto": "Sconto",
+    "Other": "Jiné",
+}
+
+function getDiscountName(reason: DiscountReason) {
+    return reasonNames[reason.type.name] ?? "Jiné"
+}
+
+function findChargeByReason<T extends ChargeOrDiscount>(discounts: T[], discount: cz.vybehpelikanu.fakturx.fold.discounts.DiscountReason, index: number): T | undefined {
+    const matching = discounts.filter(it => it.reason.equals(discount))
+    return matching[index]
+}
+
+function getDiscountContent(line: BillableLine, discount: DiscountReason, index: number) {
+    const charges = getPricePerUnit(asItem(line))?.chargesArray
+    if(charges === undefined) { return null }
+    return findChargeByReason(charges, discount, index) ?? null
+
+}
+
+function createChargeColumns(requiredChargeColumns: DeepMap<DiscountReason, number>): GridColDef<BillableLine>[] {
+    return requiredChargeColumns.entries().flatMap(([reason, count]) => {
+        let result: GridColDef<BillableLine>[] = []
+        for(let i = 0; i < count; i++) {
+            result.push({
+                    headerName: getDiscountName(reason), width: 150,
+                    valueGetter: ({row}) => ( getDiscountContent(row, reason, i)?.currencyAmount?.toString() ?? "" ),
+                    type: "string", field: `charge_${reason.type.name}_${sha256(reason.message ?? "")}_${i}`,
+
+                },
+            )
+        }
+        return result
+
+    });
+}
 
 export function PricingView(props: InvoiceViewerProps): ReactElement {
     const lines = createRows(props.invoice)
+    const requiredChargeColumnsCounts = lines
+        .map(it => getPricePerUnit(asItem(it)))
+        .filter(notNull)
+        .map(it => it.chargesArray)
+        .map(it => sumByHash(it.map(it => it.reason)))
+        .flatMap(it => it)
+    const requiredChargeColumns =
+        multiGroup(requiredChargeColumnsCounts, it => it[0])
+            .mapValues(it => it.map(it => it[1]))
+            .mapValues(it => max(it) ?? 0)
+
+    const chargeColumns = createChargeColumns(requiredChargeColumns)
+
     const rows = fillGaps(lines)
 
     const columns: GridColDef<BillableLine>[] = [
@@ -71,7 +161,9 @@ export function PricingView(props: InvoiceViewerProps): ReactElement {
         { headerName: 'Sériová čísla', width: 120, valueGetter: ({row}) => asItem(row)?.serialNumbers, type: "string", field: "serialNumbers" },
         { headerName: 'Název', width: 350, valueGetter: ({row}) => asItem(row)?.name, type: "string", field: "name" },
         { headerName: 'Počet', width: 50, valueGetter: ({row}) => asItem(row)?.count, type: "number", field: "count" },
+        { headerName: 'Fenix DPH', width: 100, valueGetter: ({row}) => asItem(row)?.fenixVATRate, type: "number", field: "vat", renderCell: ({value}) => `${value} %` },
         { headerName: 'Jednotková cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(asItem(row))?.grossPrice ), type: "string", field: "grossPrice" },
+        ...chargeColumns,
         { headerName: 'Konečná cena', width: 150, valueGetter: ({row}) => ( getPricePerUnit(asItem(row))?.total ), type: "string", field: "unitPrice" },
     ];
 
@@ -85,7 +177,7 @@ const orderToString = (order: BuyerOrder | null | undefined) => order != null ? 
 export function CustomsView(props: InvoiceViewerProps): JSX.Element {
     const data = unpack(props.invoice)
     const rows = summarize(data)
-    const columns: GridColDef<Summary>[]  = [
+    const columns: GridColDef<ImportSummary>[]  = [
         { headerName: 'Země', width: 100, valueGetter: (params) => params.row.countryOfOrigin, type: "string", field: "country" },
         { headerName: 'Kód', width: 150, valueGetter: (params) => params.row.customsCode, type: "string", field: "hscode" },
         { headerName: 'Název', width: 600, valueGetter: (params) => params.row.customsName, type: "string", field: "hsname" },
@@ -101,7 +193,7 @@ export interface InvoiceViewerProps {
     onClose?: () => void
 }
 
-type ViewType = "pricing" | "customs"
+type ViewType = "pricing" | "customs" | "overview" | "invalid"
 
 interface Numbered { number: number }
 
@@ -115,11 +207,11 @@ function createRows(invoice: Invoice): NumberedBillable[] {
     } )
 }
 
-type InvalidLine = Numbered & {
+export type InvalidLine = Numbered & {
     line: string
 }
 
-type BillableLine = NumberedBillable | InvalidLine
+export type BillableLine = NumberedBillable | InvalidLine
 
 function asBillable(line: BillableLine): NumberedBillable | null {
     return line instanceof Billable ? line : null
@@ -148,7 +240,7 @@ function fillGaps(original: NumberedBillable[]): BillableLine[] {
     return result
 }
 
-function unpack(it: Billable): Billable[] {
+export function unpack(it: Billable): Billable[] {
     if(it instanceof Compound) {
         return it.children.toArray().flatMap((it: Billable) => unpack(it))
     }
@@ -163,7 +255,7 @@ function getPricePerUnit(billable: Billable | null): CalculatedPrice | null {
     return null
 }
 
-interface Summary {
+interface ImportSummary {
     weight: number,
     customsCode: string,
     countryOfOrigin: string,
@@ -171,10 +263,11 @@ interface Summary {
 }
 
 // Todo: use items
-function summarize(it: Billable[]): Summary[] {
-    const grouped = Object.fromEntries(
-        Object.entries(groupBy(it, bill => itemize(bill)?.countryCode ?? ""))
-            .map(([key, value]) => [key, groupBy(value, value => itemize(value)?.customsCode ?? "")])
+// TODO: Use multigroup
+function summarize(it: Billable[]): ImportSummary[] {
+    const grouped = doubleGroup(it,
+            bill => itemize(bill)?.countryCode ?? "",
+            value => itemize(value)?.customsCode ?? ""
     )
 
     return Object.entries(grouped).flatMap(([country, obj]) =>
@@ -195,17 +288,6 @@ function asItem(it: BillableLine) {
     return billable && itemize(billable)
 }
 
-function itemize(it: Billable): Item | null {
+export function itemize(it: Billable): Item | null {
     return it instanceof Item ? it : null
-}
-
-function groupBy<T>(it: Array<T>, keySelector: (item: T) => string): {[key: string]: T[]} {
-    const result: {[key: string]: T[]} = {}
-    for(const i of it) {
-        const key = keySelector(i)
-        const array = result[key] ?? []
-        array.push(i)
-        result[key] = array
-    }
-    return result
 }

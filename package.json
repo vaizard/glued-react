@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fakturx/fakturx-parser": "^1.0.0-SNAPSHOT.16",
+    "@fakturx/fakturx-parser": "^1.0.0-SNAPSHOT.19",
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.11",
     "@mui/lab": "^5.0.0-alpha.146",

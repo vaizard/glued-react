@@ -19,7 +19,6 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import {allInternalRoutes, filterRoutes, groupEndpoints} from "./routes/routes";
 import CenteredLoader from "./tools/CenteredLoader";
-import Table from "./Table.tsx";
 
 
 export default class Main extends React.Component {
@@ -55,7 +54,6 @@ export default class Main extends React.Component {
     render() {
         const routes = this.state.endpoints === null ? {} : filterRoutes(allInternalRoutes, this.state.endpoints);
         const loggedIn = this.context.isUserLoggedIn();
-        console.log(routes);
         const allRoutes = Object.entries(routes).flatMap(([categoryName, category]) => (category.children)).map((routeConfig) =>
             {
                 const route = <Route path={routeConfig.path} key={routeConfig.path} element={React.createElement(routeConfig.element, {endpoints: this.state.endpoints})}/>;
@@ -67,7 +65,7 @@ export default class Main extends React.Component {
 
 
         return (<Router>
-            <Box sx={{display: 'flex'}}>
+            <Box sx={{display: 'flex', height: '100%'}}>
                 <CssBaseline/>
                 <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
                     <Toolbar>
@@ -92,7 +90,7 @@ export default class Main extends React.Component {
 
 
 
-                <Box component="main" sx={{flexGrow: 1, p: 3}}>
+                <Box component="main" sx={{flexGrow: 1, p: 3, height: '100%'}}>
 
                     <Toolbar/>
                     {this.state.alerts.size > 0 ? <Stack sx={{ width: '100%' }} spacing={2}>
@@ -111,8 +109,8 @@ export default class Main extends React.Component {
                         </Routes>
                     </Suspense>
                 </Box>
-            </Box></Router>
-        );
+            </Box>
+        </Router>);
     }
 
     handleLogout = () => this.context.logout();

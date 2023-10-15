@@ -1498,11 +1498,6 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.50.0.tgz#9e93b850f0f3fa35f5fa59adfd03adae8488e484"
   integrity sha512-NCC3zz2+nvYd+Ckfh87rA47zfu2QsQpvc6k1yzTk+b9KzRj0wkGa8LSoGOXN6Zv4lRf/EIoZ80biDh9HOI+RNQ==
 
-"@fakturx/fakturx-parser@^1.0.0-SNAPSHOT.16":
-  version "1.0.0-SNAPSHOT.16"
-  resolved "https://gitlab.com/api/v4/projects/48222592/packages/npm/@fakturx/fakturx-parser/-/@fakturx/fakturx-parser-1.0.0-SNAPSHOT.16.tgz#4abdc753ec0f061bb2f94dd23d50ed85ee96e629"
-  integrity sha1-Sr3HU+wPBhuy+U3SPVDthe6W5ik=
-
 "@floating-ui/core@^1.4.2":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.5.0.tgz#5c05c60d5ae2d05101c3021c1a2a350ddc027f8c"
