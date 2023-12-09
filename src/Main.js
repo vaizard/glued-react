@@ -14,6 +14,7 @@ import {v4 as uuidv4} from 'uuid';
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import config from "./configs/used/plugins.config"
 
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
@@ -26,7 +27,7 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            endpoints: null,
+            endpoints: groupEndpoints(config.devEndpoints),
             alerts: []
         }
     }
@@ -37,12 +38,17 @@ export default class Main extends React.Component {
                 return r.json()
             })
             .then(parsedJson => {
-                this.setState({endpoints: groupEndpoints(parsedJson)})
+                this.setEndpoints(parsedJson)
             })
             .catch((e) => {
                 this.addAlert(e.toString(), "error", "Pico nejede to")
             });
 
+    }
+
+    setEndpoints(endpoints) {
+        endpoints = [...config.devEndpoints, ...endpoints]
+        this.setState({endpoints: groupEndpoints(endpoints)})
     }
 
     // See https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/

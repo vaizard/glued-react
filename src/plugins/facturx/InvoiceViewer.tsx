@@ -276,6 +276,7 @@ function summarize(it: Billable[]): ImportSummary[] {
                 .map(it => itemize(it))
                 .map(it => (it?.count ?? 1) * (it?.gramsPerUnit ?? 0))
                 .reduce((partialSum, a) => partialSum + a, 0)
+            // @ts-ignore - this is here only because a bogus check on `any` done by IJ. Not really a problem on real build.
             return {countryOfOrigin: country, customsCode: customsCode, customsName: hsCodes[customsCode as keyof typeof hsCodes]?.nameCZ, weight: sum}
         })
     )

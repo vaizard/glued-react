@@ -10,6 +10,7 @@ import Attachments from "../../plugins/debug/attachments.manifest"
 import Products from "../../plugins/coffee/products.manifest"
 import Packlists from "../../plugins/fare/packlists.manifest"
 import FakturX from "../../plugins/facturx/fakturx.manifest"
+import Analytics from "../../plugins/artman/manifest"
 
 export default {
     "categories": {
@@ -103,6 +104,22 @@ export default {
             plugin: FakturX,
             category: "fenix"
         },
+        {
+            path: "/analytics",
+            plugin: Analytics,
+            category: "fenix"
+        },
 
+    ],
+
+    // Development endpoints - made to be able to develop without waiting for Pavel to modify routes
+    devEndpoints: [
+        {
+            "methods": [
+                "GET"
+            ],
+            "name": "be_artman_analytics_v1",
+            "url": "https://localhost.dev.anilez.cz/analytic",
+        },
     ]
 }
