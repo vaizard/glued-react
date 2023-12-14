@@ -32,18 +32,14 @@ export default class Main extends React.Component {
         }
     }
 
-    initLoad() {
-        this.context.authenticatedFetch(endpoint + '/api/core/routes/v1')
-            .then(r => {
-                return r.json()
-            })
-            .then(parsedJson => {
-                this.setEndpoints(parsedJson)
-            })
-            .catch((e) => {
-                this.addAlert(e.toString(), "error", "Pico nejede to")
-            });
-
+    async initLoad() {
+        try {
+            const response = await this.context.authenticatedFetch(endpoint + '/api/core/routes/v1')
+            const json = await response.json()
+            this.setEndpoints(json)
+        } catch (e) {
+            this.addAlert("Zobrazují se pouze aplikace, ke kterým není nutné žádné oprávnění. Popis chyby: " + e.toString(), "error", "Načtení cest a oprávnění se nezdařilo.")
+        }
     }
 
     setEndpoints(endpoints) {
@@ -61,13 +57,8 @@ export default class Main extends React.Component {
         const routes = this.state.endpoints === null ? {} : filterRoutes(allInternalRoutes, this.state.endpoints);
         const loggedIn = this.context.isUserLoggedIn();
         const allRoutes = Object.entries(routes).flatMap(([categoryName, category]) => (category.children)).map((routeConfig) =>
-            {
-                const route = <Route path={routeConfig.path} key={routeConfig.path} element={React.createElement(routeConfig.element, {endpoints: this.state.endpoints})}/>;
-                console.log(routeConfig.element);
-                return route
-            });
-
-        //return <Table/>;
+            <Route path={routeConfig.path} key={routeConfig.path} element={React.createElement(routeConfig.element, {endpoints: this.state.endpoints})}/>
+        );
 
 
         return (<Router>
@@ -96,24 +87,27 @@ export default class Main extends React.Component {
 
 
 
-                <Box component="main" sx={{flexGrow: 1, p: 3, height: '100%'}}>
+                <Box component="main" sx={{flex: 1, p: 3, height: '100%', minWidth: 0}}>
+                    <Stack spacing={2} justifyContent="space-between" sx={{height: '100%'}}>
+                        <Toolbar/>
+                        {
+                            this.state.alerts.length > 0 ? <Stack sx={{ width: '100%' }} spacing={2}>
+                                {this.state.alerts.map(alert => {
+                                    return <Alert severity={alert.severity} onClose={() => {this.removeAlert(alert.uuid)}} key={alert.uuid} variant="filled">
+                                        {alert.title && <AlertTitle>{alert.title}</AlertTitle>}
+                                        {alert.text}
+                                    </Alert>
+                                })}
+                            </Stack> : null}
 
-                    <Toolbar/>
-                    {this.state.alerts.size > 0 ? <Stack sx={{ width: '100%' }} spacing={2}>
-                        {this.state.alerts.map(alert => {
-                            return <Alert severity={alert.severity} onClose={() => {this.removeAlert(alert.uuid)}} key={alert.uuid} variant="filled">
-                                {alert.title && <AlertTitle>{alert.title}</AlertTitle>}
-                                {alert.text}
-                            </Alert>
-                        })}
-                    </Stack> : null}
-
-
-                    <Suspense fallback={<CenteredLoader/>}>
-                        <Routes>
-                            {allRoutes}
-                        </Routes>
-                    </Suspense>
+                        <Box sx={{flex: 1, minHeight : 0}} >
+                            <Suspense fallback={<CenteredLoader/>}>
+                                <Routes>
+                                    {allRoutes}
+                                </Routes>
+                            </Suspense>
+                        </Box>
+                    </Stack>
                 </Box>
             </Box>
         </Router>);

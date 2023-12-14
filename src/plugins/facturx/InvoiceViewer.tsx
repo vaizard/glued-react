@@ -52,7 +52,7 @@ export default function InvoiceViewer({invoice, onClose}: InvoiceViewerProps) : 
     if(view == "invalid") {
         return <InvalidInvoiceWarning onClose={onClose} onAccept={() => setView("pricing")} expected={invoice.expectedTotal} actual={invoice.totalPrice} />
     }
-    return <Stack>
+    return <Stack sx={{flex: 1, height: '100%'}}>
         <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
             <ToggleButtonGroup
                 color="primary"
@@ -66,7 +66,7 @@ export default function InvoiceViewer({invoice, onClose}: InvoiceViewerProps) : 
             </ToggleButtonGroup>
             { onClose !== undefined && <IconButton onClick={onClose}><CloseIcon/></IconButton> }
         </Stack>
-        <div style={{ height: 800, width: '100%' }}>
+        <div style={{ flex: 1, width: '100%', minHeight: 0 }}>
             { view == "pricing" && <PricingView invoice={invoice} /> }
             { view == "customs" && <CustomsView invoice={invoice} /> }
             { view == "overview" && <OrderSummary invoice={invoice} /> }
