@@ -10,7 +10,7 @@
     "@mui/icons-material": "^5.14.11",
     "@mui/lab": "^5.0.0-alpha.146",
     "@mui/material": "^5.14.11",
-    "@mui/x-data-grid": "^6.15.0",
+    "@mui/x-data-grid": "^6.18.5",
     "@rjsf/core": "^5.13.0",
     "@rjsf/mui": "^5.13.0",
     "@rjsf/utils": "^5.13.0",
