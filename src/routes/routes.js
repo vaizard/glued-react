@@ -67,23 +67,19 @@ function filterRoutes(routes, endpoints) {
             .map(([key, it]) => {
                 let clone = {...it}
                 clone.children = clone.children.filter((it) => hasCorrectPermission(it, endpoints));
-                console.log(clone)
                 return [key, clone]
-            }).filter(([key, it]) => it.children.length > 0)
+            }).filter(([_, it]) => it.children.length > 0)
     )
 }
 
 function hasCorrectPermission(plugin, endpointsByName) {
     for (let resource of plugin.requiredResources) {
         if(!endpointsByName.has(resource.name)) {
-            console.log(plugin)
             return false;
         }
-        console.log(endpointsByName)
         const endpoint = endpointsByName.get(resource.name);
         for(const method of resource.methods) {
             if(!endpoint.methods.includes(method)) {
-                console.log(plugin)
                 return false
             }
         }
