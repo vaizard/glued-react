@@ -7,16 +7,12 @@ import ListItemIcon from "@mui/material/ListItemIcon/ListItemIcon";
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Drawer from "@mui/material/Drawer/Drawer";
 import * as React from "react";
-import {useState} from "react";
-import {endpoint} from "./consts";
+import {Fragment, useState} from "react";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import {ExpandLess, ExpandMore, Star} from "@mui/icons-material";
 import ListItemButton from "@mui/material/ListItemButton";
-import {Fragment} from "react";
-import Authentica from "@zelitomas/authentica.js"
 import {useNavigate} from "react-router-dom";
-import CenteredBox from "./tools/CenteredBox";
 import CenteredLoader from "./tools/CenteredLoader";
 
 const drawerWidth = 360;
@@ -52,8 +48,8 @@ export default function LeftMenu(props) {
             withoutGroup = subButtons
         } else {
             buttons.push(
-                <Fragment>
-                    <ListItem button key={groupName} onClick={() => {
+                <Fragment key={groupName}>
+                    <ListItem button onClick={() => {
                         let newOpen = groupName === openItem ? "  " : groupName;
                         setOpenItem(newOpen)
                     }}>
@@ -112,8 +108,4 @@ function MenuDrawer(props) {
             {children}
         </Box>
     </Drawer>
-}
-
-function dummyNavigate(location){
-    window.location = location
 }
