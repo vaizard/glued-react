@@ -1,5 +1,4 @@
-import React from "react";
-import {Component, createRef, LegacyRef, RefObject} from "react";
+import React, {Component, createRef, RefObject} from "react";
 import "./Table.css"
 
 class Table extends Component<any, any>{

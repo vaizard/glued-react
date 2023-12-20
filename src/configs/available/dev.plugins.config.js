@@ -1,7 +1,7 @@
 import rjsf from "../../plugins/rjsf.manifest"
 import procurement from "../../plugins/fare/procurement.manifest"
 import skeleton from "../../plugins/skeleton.manifest"
-import {CoreHello, CoreAuthUsers, CoreAuthDomains} from "../../plugins/core/core.manifest"
+import {CoreAuthDomains, CoreAuthUsers, CoreHello} from "../../plugins/core/core.manifest"
 import CoreRoutes from "../../plugins/core/routes.manifest"
 import CoreAuth from "../../plugins/core/coreauth.manifest"
 import CoreHealth from "../../plugins/core/corehealth.manifest";
@@ -11,6 +11,7 @@ import Products from "../../plugins/coffee/products.manifest"
 import Packlists from "../../plugins/fare/packlists.manifest"
 import FakturX from "../../plugins/facturx/fakturx.manifest"
 import Analytics from "../../plugins/artman/manifest"
+import TableDemo from "../../plugins/dev/table/manifest";
 
 export default {
     "categories": {
@@ -31,6 +32,9 @@ export default {
         },
         "coffee": {
             "label": "Kavárna"
+        },
+        "dev": {
+            "label": "Development"
         }
     },
     "plugins": [
@@ -108,6 +112,11 @@ export default {
             path: "/analytics",
             plugin: Analytics,
             category: "fenix"
+        },
+        {
+            path: "/dev/table",
+            plugin: TableDemo,
+            category: "dev"
         },
 
     ],
