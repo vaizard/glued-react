@@ -16,6 +16,12 @@ export function mapValues<V, T extends { [s: string]: V }, R>(obj: T, valueMappe
     )
 }
 
+export function filterKeys<V>(obj: Record<string, V>, filter: (x: string) => boolean): Record<string, V> {
+    return Object.fromEntries(
+        Object.entries(obj).filter(([k]) => filter(k))
+    )
+}
+
 
 // TODO: Generalize more
 /**
@@ -52,24 +58,49 @@ export function multiGroup<K, V>(array: V[], keySelector: (val: V) => K) {
     return result
 }
 
-/**
- * This is here because JS doesn't have a good way of doing a real deepEquals :facepalm:
- */
-function generateHashOfObject(x: any): string {
-    return sha256(JSON.stringify(x))
+export class DeepUtils {
+    /**
+     * This is here because JS doesn't have a good way of doing a real deepEquals :facepalm:
+     */
+    static generateHashOfObject(x: any): string {
+        return sha256(JSON.stringify(x))
+    }
+
+    static hashEquals(x: any, y: any): boolean {
+        return this.generateHashOfObject(x) === this.generateHashOfObject(y)
+    }
 }
 
+/**
+ * Map that actually does deep equals on keys.
+ *
+ * Standard JS `Map` behaviour:
+ * ```
+ * const map = new Map<number[], string>()
+ * map.set([1, 2], "Aloha")
+ * map.has([1, 2]) // undefined
+ * map.get([1, 2]) // undefined
+ * ```
+ *
+ * `DeepMap` behaviour:
+ * ```
+ * const map = new DeepMap<number[], string>()
+ * map.set([1, 2], "Aloha")
+ * map.has([1, 2]) // true
+ * map.get([1, 2]) // "Aloha"
+ * ```
+ */
 export class DeepMap<K, V> {
     private keyMap = new Map<string, K>()
     private valMap = new Map<string, V>()
 
     get(key: K): V | undefined {
-        const hash = generateHashOfObject(key)
+        const hash = DeepUtils.generateHashOfObject(key)
         return this.valMap.get(hash)
     }
 
     set(key: K, value: V): void {
-        const hash = generateHashOfObject(key)
+        const hash = DeepUtils.generateHashOfObject(key)
         this.keyMap.set(hash, key)
         this.valMap.set(hash, value)
     }
@@ -120,3 +151,4 @@ export function max(numbers: number[]) {
     }
     return max
 }
+

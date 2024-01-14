@@ -3,7 +3,10 @@ export interface Analytic {
     code: string,
     name: string,
     uuid: string,
+    nonce: string
 }
+
+export type AnalyticUpdate = Omit<Analytic, "nonce">
 
 export class AnalyticRow {
     public analytic: Analytic;
