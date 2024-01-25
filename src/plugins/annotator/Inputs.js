@@ -1,10 +1,9 @@
 import TextField from "@mui/material/TextField/TextField";
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import "./style.css"
-import {BiBrightnessHalf} from "react-icons/bi";
 import InputAdornment from "@mui/material/InputAdornment";
-
+import {InputSize, Text} from "./SpecificTextInputs"
 
 
 function DateSelector({value, onValueChange, label, size, required}){
@@ -12,7 +11,7 @@ function DateSelector({value, onValueChange, label, size, required}){
 }
 
 
-function eventToValue(event) {
+export function eventToValue(event) {
     const result = event.target.value;
     if(result === "") {
         return null;
@@ -27,10 +26,6 @@ function parseNumber(text) {
     return result;
 }
 
-
-function Text ({value, onValueChange, required, size, label, other, error}) {
-    return <TextField className={getInputClassName(size)} value={value} onChange={e => onValueChange(eventToValue(e))} required={required} label={label} {...other} error={error}/>
-}
 
 /**
  * Uncontrolled numeric input. The value property is a default value.
@@ -88,12 +83,6 @@ function CurrencySelector ({value, onChange, required, size}) {
     />
 }
 
-const getInputClassName = (inputSize) => `forminput ${inputSize ?? InputSize.Full}`;
-
-const InputSize = {
-    Full: 'big',
-    Half: 'small',
-    Third: 'third'
-}
+export const getInputClassName = (inputSize) => `forminput ${inputSize ?? InputSize.Full}`;
 
 export {DateSelector, Text, CurrencySelector, NumericInput, InputSize}

@@ -130,5 +130,15 @@ export default {
             "name": "be_artman_analytics_v1",
             "url": "https://localhost.dev.anilez.cz/analytic",
         },
+        {
+            "methods": ["GET", "POST"],
+            "name": "be_annotations_task_v1",
+            "url": "https://localhost.dev.anilez.cz/annotation/tasks"
+        },
+        {
+            "methods": ["GET"],
+            "name": "contacts",
+            "url": "https://localhost.dev.anilez.cz/contacts"
+        }
     ]
 }

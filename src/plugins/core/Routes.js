@@ -4,8 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../../tools/CenteredBox";
 import {endpoint} from "../../consts";
 import {DataGrid} from "@mui/x-data-grid";
-import {JSONViewer} from "./Core";
-import Link from "@mui/material/Link";
+import {JSONViewer} from "../../components/JSONViewer";
 
 
 const RoutesPath = endpoint + "/api/core/routes/v1"

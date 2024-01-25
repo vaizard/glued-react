@@ -5,7 +5,8 @@ export default {
         /*{name: "search_contact", methods: ["GET"]},
         {name: "annotate", methods: ["PUT", "POST"]},
         {name: "payment", methods: ["POST"]}*/
-        {name: "be_stor_annotations_v1", methods: ["PUT", "POST"]},
+        {name: "be_annotations_task_v1", methods: ["GET", "POST"]},
+        {name: "contacts", methods: ["GET"]},
     ],
     "name": "annotator",
     "label": "Anotátor",

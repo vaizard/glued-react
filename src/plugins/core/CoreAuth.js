@@ -3,10 +3,9 @@ import AuthenticationContext from "../../AuthenticationContext"
 import CircularProgress from "@mui/material/CircularProgress";
 import CenteredBox from "../../tools/CenteredBox";
 import {endpoint} from "../../consts";
-import {JSONViewer} from "./Core";
 import {DataGrid} from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import Link from '@mui/material/Link';
+import {JSONViewer} from "../../components/JSONViewer";
 
 const authFailPath  = endpoint + "/api/core/auth/test/fail/v1"
 const authPassPath  = endpoint + "/api/core/auth/test/pass/v1"

@@ -1,26 +1,25 @@
-import React, {useState} from "react";
+import React from "react";
 import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
-import {debounce} from "@mui/material";
+import {debounce, Snackbar} from "@mui/material";
 import TextField from "@mui/material/TextField/TextField";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Box from "@mui/material/Box";
 import "./style.css"
 import {InputSize, Text} from "./Inputs";
 import {searchResultToSomethingFuckingNormal} from "./fuckingAdapterOfFuckingPavelShit";
-
-const searchResultPath = "http://localhost:8000/search?query="
-
+import Alert from "@mui/material/Alert";
 
 class CounterpartySelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            options: []
+            options: [],
+            snack: null,
+            closeInterval: null,
         }
         this.searchAbortController = null
-        this.searchResultPath = props.endpoints.get('be_contacts_v1').url
-        console.log(props)
+        this.searchResultPath = props.endpoints.get('contacts').url
     }
 
     cancelPreviousSearch = () => {
@@ -32,26 +31,52 @@ class CounterpartySelector extends React.Component {
 
     startSearch = async (inputText) => {
         try {
+            if(inputText.length === 0) {
+                inputText = this.props.initialInput ?? ""
+            }
             this.cancelPreviousSearch()
             this.setState({loading: true})
-            let response = await fetch(this.searchResultPath + "?q=" + encodeURIComponent(inputText));
-            if(response.ok) {
-                let json = await response.json();
-                this.handleSearchResults(json)
-            } else {
-                this.handleSearchResults([])
-            }
+
+            const result = await this.getResults(inputText ?? "")
+            this.handleSearchResults(result)
 
         } catch (e) {
             if (e.name !== 'AbortError') {
-                console.error(e)
-                this.setState({loading: false})
+                this.openSnack("API search resulted in an error", e)
+                this.handleSearchResults([])
             }
         }
     }
 
+    componentDidMount() {
+        this.startSearch("")
+        //alert(this.props.initialInput)
+    }
+
+    getResults = async (inputText) => {
+        if(inputText.length === 0) {
+            return []
+        }
+
+        const url = new URL(this.searchResultPath)
+        url.searchParams.set("q", inputText)
+
+        const response = await fetch(url.toString());
+        if(response.ok) {
+            let json = await response.json();
+            if(json === null) {
+                this.openSnack("API broke again (returned 200, but null)")
+            }
+            return json ?? []
+        } else {
+            this.openSnack(`API broke again (returned ${response.status})`)
+            return []
+        }
+
+    }
+
     getLabel = (contact) => {
-        let identifier = null
+        let identifier
         if(contact.ico !== undefined){
             identifier = `IČO ${contact.ico}`
         }else if(contact.dic !== undefined){
@@ -62,9 +87,33 @@ class CounterpartySelector extends React.Component {
         return `${contact.name} (${identifier})`
     }
 
+    handleSnackClose = () => this.setState({closeInterval: null})
+    openSnack = (snack, error) => {
+        console.log(error ?? snack)
+        if(this.state.closeInterval) {
+            clearTimeout(this.state.closeInterval)
+        }
+        const interval = setTimeout(this.handleSnackClose, 5000)
+        this.setState({ snack: snack, closeInterval: interval })
+    }
+
     render() {
         return (
             <>
+                { /*TODO: delete me once Pavel fixes all the shit*/ }
+                <Snackbar
+                    open={this.state.closeInterval !== null}
+                    onClose={this.handleSnackClose}
+                >
+                    <Alert
+                        onClose={this.handleSnackClose}
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        {this.state.snack ?? ""}
+                    </Alert>
+                </Snackbar>
                 <Autocomplete
                     className="forminput"
                     id="counterparty"
@@ -75,6 +124,7 @@ class CounterpartySelector extends React.Component {
                     onInputChange={debounce((event, input) => this.startSearch(input), 250)}
                     options={this.state.options}
                     loading={this.state.loading}
+                    autoFocus={true}
                     onChange={(e, it) => this.props.onSelected(it)}
                     renderInput={(params) => (
                         <TextField
@@ -109,7 +159,7 @@ class CounterpartySelector extends React.Component {
  * Controlled Counterparty form.
  * @param props
  */
-export default function CounterPartyForm({counterparty, setCounterparty, endpoints}) {
+export default function CounterPartyForm({counterparty, setCounterparty, endpoints, initialInput}) {
 
     function setField(fieldName, value) {
         let newCouterparty = counterparty ?? {};
@@ -117,9 +167,8 @@ export default function CounterPartyForm({counterparty, setCounterparty, endpoin
         setCounterparty(newCouterparty)
     }
 
-
     return <Box component="form">
-        <CounterpartySelector onSelected={setCounterparty} endpoints={endpoints}/>
+        <CounterpartySelector initialInput={initialInput} onSelected={setCounterparty} endpoints={endpoints}/>
         {counterparty?.id != null ? null : <>
             <Text size={InputSize.Half} value={counterparty?.ico}
                        onValueChange={it => setField("ico", it)} required={true} label="IČO"/>

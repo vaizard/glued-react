@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {FetchLikeFunction} from "../../AuthenticationContext";
+import {FetchLikeFunction} from "./AuthenticationContext";
 
 // Defined because we will be shadowing real fetch later on
 const realFetch = fetch

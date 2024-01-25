@@ -109,3 +109,5 @@ dist
 /build
 *.iml
 /src/configs/used/plugins.config.js
+
+/private

@@ -14,8 +14,17 @@
     width: calc(100%/3 - 10px);
 }
 
-.right-aligned {
+.between {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin: 5px;
+    gap: 5px;
+}
+
+.right-aligned {
+    justify-self: flex-end;
+}
+
+.left-aligned {
+    justify-self: flex-start;
 }

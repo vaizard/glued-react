@@ -1,6 +1,6 @@
 import React, {FC, useContext, useState} from 'react';
 import AuthenticationContext, {FetchLikeFunction} from "../../AuthenticationContext";
-import {relative, RemoteRequestException, useData} from "./utils";
+import {relative, RemoteRequestException, useData} from "../../utils";
 import {PluginProps} from "../../types/plugins";
 import {Analytic, AnalyticRow, AnalyticUpdate} from "./types";
 import {DataGrid, GridColDef, GridRowId, GridRowModes, GridRowModesModel} from "@mui/x-data-grid";

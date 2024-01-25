@@ -22,5 +22,22 @@ export default {
             category: "coffee"
         },
 
+    ],
+    devEndpoints: [
+        {
+            "methods": ["GET"],
+            "name": "be_artman_analytics_v1",
+            "url": "https://artman.internal.kompresorovna.anilez.cz/analytic",
+        },
+        {
+            "methods": ["GET", "POST"],
+            "name": "be_annotations_task_v1",
+            "url": "https://artman.internal.kompresorovna.anilez.cz/annotation/tasks"
+        },
+        {
+            "methods": ["GET"],
+            "name": "contacts",
+            "url": "https://artman.internal.kompresorovna.anilez.cz/contacts"
+        }
     ]
 }
