@@ -5,7 +5,7 @@ import CenteredBox from "../../tools/CenteredBox";
 import {endpoint} from "../../consts";
 import {DataGrid} from "@mui/x-data-grid";
 import Link from '@mui/material/Link';
-import {JSONViewer} from "../../components/JSONViewer";
+import JSONViewer from "../../components/JSONViewer";
 
 const authFailPath  = endpoint + "/api/core/auth/test/fail/v1"
 const authPassPath  = endpoint + "/api/core/auth/test/pass/v1"

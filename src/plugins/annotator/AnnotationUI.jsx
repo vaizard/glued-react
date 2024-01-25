@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import "./style.css"
 import AuthenticationContext from "../../AuthenticationContext";
 
-import {JSONViewer} from "../../components/JSONViewer";
+import JSONViewer from "../../components/JSONViewer";
 
 /**
  * Enum of saving state
@@ -67,7 +67,6 @@ export default class AnnotationUI extends React.Component {
                 <CurrencySelector value={data?.currency ?? null} size={InputSize.Full} onChange={it => this.setField("currency", it)}/>
                 <div className="between">
                     <Button disabled={ this.props.onReject === undefined } color="error" onClick={() => this.props.onReject?.(data)} variant="text" tabIndex={-1}>Nelze anotovat</Button>
-                    <div >{this.props.initialInput}</div>
                     <Button disabled={!this.allFilled()} onClick={() => this.props.onSave?.(data)} variant="contained">Uložit</Button>
                 </div>
                 <JSONViewer label={"JSON"} content={this.state.data}/>
