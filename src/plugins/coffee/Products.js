@@ -36,8 +36,7 @@ export default class Products extends React.Component {
 
     constructor(props) {
         super(props);
-        this.endpoint = "https://gdev.industra.space/api/roasters/simple/products/v1";
-        this.eanEndpoint = "https://localhost/"
+        this.endpoint = props.endpoints.get("be_roasters_simple_products_v1").url;
         this.state = {
 	        content: null,
             coffee: null,
