@@ -1,1 +1,0 @@
-Here are the *symlinks* to currently used configs.

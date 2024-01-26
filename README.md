@@ -1,39 +1,13 @@
-# Glued React
+# 303 See Other
 
-Well, this project is not documented *yet*.
+This repository has been permanently moved [to GitLab](https://gitlab.com/vaizard/glued-react).
 
-React Client / UI for the Glued project.
+Change your origin and DO NOT PUSH to this repository.
 
-
-## Start
-
+Here is a quick how-to:
 ```bash
-yarn install
-npm start
+git remote remove origin
+git remote add origin git@gitlab.com:vaizard/glued-react.git
 ```
 
-## Build
-Set following env variables:
- * `REACT_APP_ENDPOINT`
- * `REACT_APP_AUTH_TOKEN_ENDPOINT`
- * `REACT_APP_AUTH_CLIENT_ID`
- * `REACT_APP_AUTH_ENDSESSION_ENDPOINT`
- * `REACT_APP_AUTH_ENDPOINT`
-
-Create correct config in src/config/available and reference it during build
-
-```bash
-CONFIG_NAME=industra npm run build 
-```
-
-
-### Tom TODOs
-> Tom disagrees. Those are Pavels TODOs ;)
-- CSP Nonces
-  - slim nonce middleware
-  - https://csplite.com/csp250/
-  - https://scotthelme.co.uk/csp-nonce-support-in-nginx/
-  - https://krvtz.net/posts/easy-nonce-based-content-security-policy-with-nginx.html
-  - https://mui.com/guides/content-security-policy/
-
-
+See you there!
